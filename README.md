@@ -11,7 +11,7 @@
 
 ### 🔗 Live Access & Deployment
 - **Live Public URL**: [https://careeriq-dashboard.loca.lt](https://careeriq-dashboard.loca.lt) *(Tunnel security password if prompted: `152.59.59.112`)*
-- **1-Click Cloud Deploy on Render**: [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sanketsahane56/AI-Powered-Career-Intelligence-Dashboard)
+- **1-Click Cloud Deploy on Render**: [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)]([https://render.com/deploy?repo=https://github.com/sanketsahane56/AI-Powered-Career-Intelligence-Dashboard](https://careeriq-dashboard.onrender.com))
 
 ---
 
