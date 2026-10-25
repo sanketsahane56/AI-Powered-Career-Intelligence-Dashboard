@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block page_title %}Analysis History & Saved Reports{% endblock %}
+
+{% block content %}
+<!-- History Header & Stats -->
+<div class="stats-grid" style="margin-bottom: 24px;">
+    <div class="stat-card">
+        <div class="stat-icon blue">
+            <i data-lucide="database"></i>
+        </div>
+        <div class="stat-info">
+            <div class="stat-value">{{ stats.total_analyses }}</div>
+            <div class="stat-label">Persisted Analysis Sessions</div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon emerald">
+            <i data-lucide="trending-up"></i>
+        </div>
+        <div class="stat-info">
+            <div class="stat-value">{{ stats.average_score }} <span style="font-size: 1rem; color: #94a3b8;">/100</span></div>
+            <div class="stat-label">Average Score</div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon violet">
+            <i data-lucide="cpu"></i>
+        </div>
+        <div class="stat-info">
+            <div class="stat-value">{{ stats.average_skills }}</div>
+            <div class="stat-label">Avg. Cataloged Skills</div>
+        </div>
+    </div>
+</div>
+
+<!-- History Table Card -->
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h3 class="card-title"><i data-lucide="archive"></i> Saved Analysis Sessions</h3>
+            <p class="card-subtitle">Stored securely in your local SQLite database</p>
+        </div>
+        <a href="{{ url_for('scanner') }}" class="btn btn-primary btn-sm">
+            <i data-lucide="plus"></i>
+            <span>Run New Scan</span>
+        </a>
+    </div>
+
+    {% if analyses %}
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Candidate</th>
+                    <th>Contact</th>
+                    <th>ATS Score</th>
+                    <th>Top Match</th>
+                    <th>Skills</th>
+                    <th>Date</th>
+                    <th style="text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in analyses %}
+                <tr id="row-{{ a.session_id }}">
+                    <td>
+                        <strong style="color: #0f172a;">{{ a.candidate_name }}</strong>
+                        <div style="font-size: 0.72rem; color: #94a3b8;">ID: {{ a.session_id }}</div>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.85rem; color: #475569;">{{ a.email or 'None' }}</div>
+                    </td>
+                    <td>
+                        {% if a.overall_score >= 80 %}
+                            <span class="pill pill-emerald">{{ a.overall_score }} / 100</span>
+                        {% elif a.overall_score >= 60 %}
+                            <span class="pill pill-amber">{{ a.overall_score }} / 100</span>
+                        {% else %}
+                            <span class="pill pill-rose">{{ a.overall_score }} / 100</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="pill pill-blue">{{ a.top_role }}</span>
+                        <span style="font-size: 0.78rem; color: #64748b; margin-left: 4px;">({{ a.top_role_fit }}%)</span>
+                    </td>
+                    <td>
+                        <span class="pill pill-gray">{{ a.skills_count }} skills</span>
+                    </td>
+                    <td style="font-size: 0.82rem; color: #64748b;">
+                        {{ a.created_at[:16] }}
+                    </td>
+                    <td style="text-align: right;">
+                        <div style="display: inline-flex; gap: 6px;">
+                            <a href="{{ url_for('scanner', session_id=a.session_id) }}" class="btn btn-secondary btn-sm" title="Re-open analysis">
+                                <i data-lucide="eye"></i>
+                            </a>
+                            <a href="{{ url_for('job_match', session_id=a.session_id) }}" class="btn btn-secondary btn-sm" title="Match against job">
+                                <i data-lucide="crosshair"></i>
+                            </a>
+                            <a href="{{ url_for('api_download_report', session_id=a.session_id) }}" class="btn btn-secondary btn-sm" title="Download PDF Report">
+                                <i data-lucide="download"></i>
+                            </a>
+                            <button type="button" class="btn btn-secondary btn-sm" style="color: #ef4444;" title="Delete record" onclick="deleteSession('{{ a.session_id }}')">
+                                <i data-lucide="trash-2"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 48px 20px;">
+        <div style="width: 56px; height: 56px; border-radius: 50%; background: #f1f5f9; color: #94a3b8; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+            <i data-lucide="inbox" style="width: 28px; height: 28px;"></i>
+        </div>
+        <h4 style="font-size: 1.1rem; margin-bottom: 6px;">No Scans in History</h4>
+        <p style="color: #64748b; font-size: 0.88rem; margin-bottom: 18px;">
+            Every resume analysis you run is stored here for inspection, reporting, and job matching.
+        </p>
+        <a href="{{ url_for('scanner') }}" class="btn btn-primary">
+            <i data-lucide="file-plus"></i>
+            <span>Scan First Resume</span>
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function deleteSession(sessionId) {
+    if (!confirm('Are you sure you want to delete this resume analysis session?')) return;
+    
+    try {
+        const res = await fetch(`/api/analysis/${sessionId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+            const row = document.getElementById(`row-${sessionId}`);
+            if (row) row.remove();
+            showToast('Session record deleted.', 'info');
+        } else {
+            showToast('Failed to delete session.', 'error');
+        }
+    } catch (e) {
+        showToast('Error deleting session: ' + e.message, 'error');
+    }
+}
+</script>
+{% endblock %}

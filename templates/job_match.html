@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block page_title %}Job Description Match & Skill Gap Analyzer{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 28px;">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title"><i data-lucide="crosshair"></i> Compare Resume against Job Description</h2>
+            <p class="card-subtitle">
+                Identify overlapping competencies, missing technical keywords, and category discrepancies before applying.
+            </p>
+        </div>
+    </div>
+
+    <form id="job-match-form">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <!-- Left: Target Job Description -->
+            <div>
+                <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 6px;">
+                    1. Select Industry Preset or Custom Job Description
+                </label>
+                <select id="preset-select" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 12px; font-family: inherit; font-size: 0.9rem;">
+                    <option value="">-- Choose a Preset Job or Paste Below --</option>
+                    {% for key, preset in presets.items() %}
+                        <option value="{{ key }}" data-text="{{ preset.text }}">{{ preset.title }} ({{ preset.company }})</option>
+                    {% endfor %}
+                </select>
+
+                <textarea id="jd-textarea" rows="10" placeholder="Paste the complete job description, requirements, and responsibilities here..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; font-family: inherit; font-size: 0.88rem; resize: vertical;"></textarea>
+            </div>
+
+            <!-- Right: Candidate Skills -->
+            <div>
+                <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 6px;">
+                    2. Candidate Verified Skills (Comma-separated)
+                </label>
+                <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 12px;">
+                    {% if candidate_name %}
+                        Loaded skills for <strong>{{ candidate_name }}</strong> from your previous scan session.
+                    {% else %}
+                        Enter your skills or run a scan in the Resume Scanner.
+                    {% endif %}
+                </div>
+                <textarea id="skills-input" rows="10" placeholder="Python, React, TypeScript, Docker, PostgreSQL, AWS, Git, REST APIs, Redis, Microservices, CI/CD, Kubernetes..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; font-family: inherit; font-size: 0.88rem; resize: vertical;">{{ skills_list|join(', ') if skills_list else 'Python, JavaScript, TypeScript, React, Next.js, Node.js, Express, Flask, FastAPI, PostgreSQL, Docker, Kubernetes, AWS, Redis, Git, CI/CD, REST APIs, Microservices, System Design, PyTest' }}</textarea>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end;">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i data-lucide="layers"></i>
+                <span>Run Skill Gap Analysis</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Comparison Results Section -->
+<div id="comparison-results" style="display: none;">
+    <!-- Top Match Score & Radar Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px; margin-bottom: 24px; align-items: start;">
+        <!-- Match Score Card -->
+        <div class="card">
+            <div class="card-header" style="margin-bottom: 12px;">
+                <h3 class="card-title"><i data-lucide="check-circle"></i> Job Requirement Match</h3>
+            </div>
+            <div class="gauge-box">
+                <div class="gauge-circle" id="match-score-circle">
+                    <div class="gauge-number" id="match-score-value">0%</div>
+                    <div class="gauge-total">MATCH FIT</div>
+                </div>
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;" id="match-score-rating">
+                    COMPUTING...
+                </div>
+                <p style="font-size: 0.82rem; color: #64748b;">
+                    Percentage of job technical requirements and tools present in your candidate profile.
+                </p>
+            </div>
+        </div>
+
+        <!-- Radar Chart Card -->
+        <div class="card">
+            <div class="card-header" style="margin-bottom: 12px;">
+                <h3 class="card-title"><i data-lucide="radar"></i> Competency Overlap by Category</h3>
+                <span class="pill pill-blue">Candidate vs Job</span>
+            </div>
+            <div style="height: 270px; position: relative;">
+                <canvas id="comparisonRadarCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills Breakdown Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; align-items: start;">
+        <!-- Matched Skills Card (Green) -->
+        <div class="card">
+            <div class="card-header" style="margin-bottom: 14px;">
+                <h3 class="card-title" style="color: #059669;">
+                    <i data-lucide="check" style="color: #10b981;"></i> Matched Skills Found
+                </h3>
+            </div>
+            <div class="skill-tags" id="matched-skills-tags">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Missing Skills Gap Card (Red) -->
+        <div class="card">
+            <div class="card-header" style="margin-bottom: 14px;">
+                <h3 class="card-title" style="color: #dc2626;">
+                    <i data-lucide="alert-triangle" style="color: #ef4444;"></i> High-Priority Skill Gaps
+                </h3>
+            </div>
+            <div class="skill-tags" id="missing-skills-tags">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Actionable Advice Card -->
+    <div class="card">
+        <h3 class="card-title" style="margin-bottom: 16px;">
+            <i data-lucide="lightbulb" style="color: #f59e0b;"></i> Strategic Resume Optimization Advice
+        </h3>
+        <div id="comparison-advice">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/job_match.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CareerIQ - AI-Powered Career Intelligence & ATS Resume Analytics{% endblock %}</title>
+    <meta name="description" content="CareerIQ provides transparent ATS resume scoring, technical skill extraction, job description gap analysis, and career recommendations.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Chart.js 4.4 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+    <!-- Custom SaaS Design System -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="app-container">
+        <!-- Dark Navy Sidebar -->
+        <aside class="sidebar" id="app-sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo">IQ</div>
+                <div class="brand-text">
+                    <h1>CareerIQ</h1>
+                    <div class="brand-tag">Career Intelligence</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('dashboard') }}" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ url_for('scanner') }}" class="nav-item {% if active_page == 'scanner' %}active{% endif %}">
+                    <i data-lucide="file-search"></i>
+                    <span>ATS Resume Scanner</span>
+                </a>
+                <a href="{{ url_for('job_match') }}" class="nav-item {% if active_page == 'job_match' %}active{% endif %}">
+                    <i data-lucide="crosshair"></i>
+                    <span>Job Gap Analyzer</span>
+                </a>
+                <a href="{{ url_for('roles_explorer') }}" class="nav-item {% if active_page == 'roles' %}active{% endif %}">
+                    <i data-lucide="compass"></i>
+                    <span>Career Roles</span>
+                </a>
+                <a href="{{ url_for('history') }}" class="nav-item {% if active_page == 'history' %}active{% endif %}">
+                    <i data-lucide="history"></i>
+                    <span>Analysis History</span>
+                </a>
+                <a href="{{ url_for('guide') }}" class="nav-item {% if active_page == 'guide' %}active{% endif %}">
+                    <i data-lucide="book-open"></i>
+                    <span>ATS Handbook</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-badge">
+                    <div style="display: flex; align-items: center; gap: 6px; color: #10b981; font-weight: 600; margin-bottom: 2px;">
+                        <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block;"></span>
+                        Local Engine Active
+                    </div>
+                    <div>100% Private &bull; Zero External AI Cost</div>
+                </div>
+                <div style="font-size: 0.72rem; color: #64748b; text-align: center;">
+                    v1.0.0 &bull; CareerIQ Platform
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <div class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle navigation">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="page-title">{% block page_title %}Dashboard{% endblock %}</div>
+                </div>
+                <div class="topbar-right">
+                    <div class="date-badge" id="header-date">Today</div>
+                    <a href="{{ url_for('scanner') }}" class="btn btn-primary btn-sm">
+                        <i data-lucide="plus"></i>
+                        <span>New Scan</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Workspace Body -->
+            <main class="content-wrapper">
+                {% block content %}{% endblock %}
+            </main>
+
+            <!-- Disclaimer Banner -->
+            <footer class="disclaimer-banner">
+                <div>
+                    <strong>CareerIQ Transparency Notice:</strong> Scoring is calculated using verified ATS heuristic algorithms, keyword density, and industry taxonomies. Does not guarantee employment.
+                </div>
+                <div style="white-space: nowrap; margin-left: 16px;">
+                    Built by <a href="https://github.com/sanketsahane56" target="_blank" rel="noopener">Sanket Sahane</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="global-loading">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loading-title">Processing Document...</div>
+        <div class="loading-step" id="loading-step">Parsing resume structure...</div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Initialize Lucide icons
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

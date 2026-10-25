@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block page_title %}ATS Resume Scanner & Scorecard{% endblock %}
+
+{% block content %}
+<!-- Scanner Input Form Card -->
+<div class="card" style="margin-bottom: 28px;">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title"><i data-lucide="file-search"></i> Input Resume Document</h2>
+            <p class="card-subtitle">Upload a PDF or paste text to perform automated ATS heuristic parsing and skill extraction</p>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-load-sample">
+            <i data-lucide="sparkles"></i>
+            <span>Load Sample Resume</span>
+        </button>
+    </div>
+
+    <form id="scanner-form">
+        <!-- Input Tabs -->
+        <div class="tabs-nav">
+            <button type="button" class="tab-btn active" data-target="pane-upload">
+                <i data-lucide="file-up"></i> Upload PDF Document
+            </button>
+            <button type="button" class="tab-btn" data-target="pane-text">
+                <i data-lucide="align-left"></i> Paste Raw Text
+            </button>
+        </div>
+
+        <!-- Upload PDF Pane -->
+        <div class="tab-pane" id="pane-upload">
+            <div class="upload-zone" id="dropzone">
+                <div class="upload-icon">
+                    <i data-lucide="upload-cloud" style="width: 28px; height: 28px;"></i>
+                </div>
+                <h4 style="font-size: 1.05rem; margin-bottom: 6px;">Drag and drop your Resume PDF here</h4>
+                <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 14px;">
+                    Supports searchable PDF files (Max 10MB)
+                </p>
+                <div id="selected-file-name" style="margin-bottom: 12px;"></div>
+                <input type="file" id="resume-file-input" accept=".pdf,.txt" style="display: none;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('resume-file-input').click()">
+                    Browse Files
+                </button>
+            </div>
+        </div>
+
+        <!-- Paste Text Pane -->
+        <div class="tab-pane" id="pane-text" style="display: none;">
+            <textarea id="resume-text-input" rows="10" placeholder="Paste your resume content, experience bullet points, and skills here..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; font-family: inherit; font-size: 0.9rem; resize: vertical;"></textarea>
+        </div>
+
+        <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 12px;">
+            <button type="submit" class="btn btn-primary btn-lg" id="btn-submit-scan">
+                <i data-lucide="scan-line"></i>
+                <span>Analyze Resume Now</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Results Section (Populated dynamically via JS) -->
+<div id="results-section" style="{% if existing_data %}display: block;{% else %}display: none;{% endif %}">
+    <!-- Candidate Header Card -->
+    <div class="card" style="margin-bottom: 24px; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <h2 id="res-candidate-name" style="font-size: 1.5rem; font-weight: 700;">
+                        {{ existing_data.candidate_name if existing_data else 'Candidate' }}
+                    </h2>
+                    <span class="pill pill-blue" id="res-doc-meta">
+                        {{ existing_data.word_count if existing_data else '0' }} words • {{ existing_data.page_count if existing_data else '1' }} pages
+                    </span>
+                </div>
+                <div style="display: flex; gap: 16px; margin-top: 6px; font-size: 0.85rem; color: #64748b;">
+                    <span id="res-candidate-email"><i data-lucide="mail" style="width: 14px; height: 14px; display: inline;"></i> {{ existing_data.email if existing_data and existing_data.email else 'Email not listed' }}</span>
+                    <span id="res-candidate-phone"><i data-lucide="phone" style="width: 14px; height: 14px; display: inline;"></i> {{ existing_data.phone if existing_data and existing_data.phone else 'Phone not listed' }}</span>
+                </div>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button type="button" class="btn btn-secondary" id="btn-download-pdf">
+                    <i data-lucide="download"></i>
+                    <span>Download Executive PDF</span>
+                </button>
+                <button type="button" class="btn btn-violet" id="btn-go-job-match">
+                    <i data-lucide="crosshair"></i>
+                    <span>Compare with Target Job</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Analytics Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; margin-bottom: 24px;">
+        <!-- Left: Overall Score & Dimensions -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+            <!-- Overall Score Card -->
+            <div class="card">
+                <div class="card-header" style="margin-bottom: 12px;">
+                    <h3 class="card-title"><i data-lucide="gauge"></i> Overall CareerIQ ATS Score</h3>
+                    <span class="pill pill-gray">Weighted Multi-Factor</span>
+                </div>
+
+                <div class="gauge-box">
+                    <div class="gauge-circle" id="res-score-circle">
+                        <div class="gauge-number" id="res-score-value">
+                            {{ existing_data.overall_score if existing_data else '0' }}
+                        </div>
+                        <div class="gauge-total">OUT OF 100</div>
+                    </div>
+                    <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;" id="res-score-rating">
+                        COMPUTING FIT...
+                    </div>
+                    <p style="font-size: 0.82rem; color: #64748b; max-width: 320px;">
+                        Transparently evaluated across technical competencies, measurable achievements, active voice, and formatting structure.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dimension Score Breakdown Grid -->
+            <div class="card">
+                <h3 class="card-title" style="margin-bottom: 16px;"><i data-lucide="sliders"></i> ATS Evaluation Dimensions</h3>
+                <div id="res-dimensions-grid" style="display: flex; flex-direction: column; gap: 14px;">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Strategic Optimization Plan -->
+            <div class="card">
+                <h3 class="card-title" style="margin-bottom: 16px;">
+                    <i data-lucide="check-square" style="color: #2563eb;"></i> Actionable ATS Optimization Plan
+                </h3>
+                <div id="res-action-plan">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Radar Chart, Skills Inventory, and Role Matches -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+            <!-- Competency Radar Chart -->
+            <div class="card">
+                <div class="card-header" style="margin-bottom: 10px;">
+                    <h3 class="card-title"><i data-lucide="radar"></i> Technical Competency Balance</h3>
+                    <span class="pill pill-blue">8 Domains</span>
+                </div>
+                <div style="height: 260px; position: relative;">
+                    <canvas id="skillsRadarCanvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Role Compatibility Matches -->
+            <div class="card">
+                <div class="card-header" style="margin-bottom: 12px;">
+                    <h3 class="card-title"><i data-lucide="compass"></i> Top Role Alignments</h3>
+                    <span class="pill pill-emerald">Market Profiles</span>
+                </div>
+                <div id="res-role-matches">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Verified Skills Inventory -->
+            <div class="card">
+                <div class="card-header" style="margin-bottom: 12px;">
+                    <h3 class="card-title"><i data-lucide="cpu"></i> Verified Skills Catalog</h3>
+                    <span class="pill pill-gray">Normalized</span>
+                </div>
+                <div id="res-skills-container">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/scanner.js') }}"></script>
+{% if existing_data %}
+<script>
+    // Automatically render existing session data passed from server
+    document.addEventListener('DOMContentLoaded', () => {
+        const existingData = {{ existing_data|tojson }};
+        const metadata = {
+            candidate_name: existingData.candidate_name,
+            email: existingData.email,
+            phone: existingData.phone
+        };
+        const analysis = {
+            overall_score: existingData.overall_score,
+            word_count: existingData.word_count,
+            page_count: existingData.page_count,
+            dimensions: existingData.dimensions || {},
+            skills: existingData.skills || {},
+            role_matches: existingData.role_matches || [],
+            action_plan: existingData.action_plan || []
+        };
+        renderResults(existingData.session_id, metadata, analysis);
+    });
+</script>
+{% endif %}
+{% endblock %}

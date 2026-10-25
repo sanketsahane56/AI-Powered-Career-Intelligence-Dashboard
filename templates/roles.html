@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block page_title %}Career Role Market Taxonomy & Profiles{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 28px; background: linear-gradient(135deg, #0b132b 0%, #1e293b 100%); color: #ffffff;">
+    <h2 style="color: #ffffff; font-size: 1.6rem; margin-bottom: 8px;">Explore Standard Market Career Profiles</h2>
+    <p style="color: #94a3b8; font-size: 0.95rem; max-width: 750px;">
+        CareerIQ maps technical resumes against verified industry job profiles. Discover the core technical requirements, secondary scaling competencies, and responsibilities expected across modern engineering tiers.
+    </p>
+</div>
+
+<!-- Roles Grid -->
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+    {% for key, role in roles.items() %}
+    <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
+                <div class="stat-icon blue" style="width: 42px; height: 42px;">
+                    <i data-lucide="{{ role.icon }}"></i>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.15rem; font-weight: 700;">{{ role.title }}</h3>
+                    <span class="pill pill-blue" style="font-size: 0.72rem;">Engineering Track</span>
+                </div>
+            </div>
+
+            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 16px; line-height: 1.45;">
+                {{ role.description }}
+            </p>
+
+            <!-- Core Skills -->
+            <div style="margin-bottom: 14px;">
+                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; margin-bottom: 6px;">
+                    Core Competencies (Must-Have)
+                </div>
+                <div class="skill-tags">
+                    {% for skill in role.core_skills %}
+                        <span class="skill-tag" style="background: #eff6ff; color: #1e40af; border-color: #bfdbfe;">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Secondary Skills -->
+            <div style="margin-bottom: 16px;">
+                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 6px;">
+                    Secondary & Scaling Tools
+                </div>
+                <div class="skill-tags">
+                    {% for skill in role.secondary_skills %}
+                        <span class="skill-tag">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-top: 8px;">
+            <a href="{{ url_for('scanner') }}" class="btn btn-secondary btn-sm" style="width: 100%;">
+                <i data-lucide="scan"></i>
+                <span>Check My Alignment</span>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

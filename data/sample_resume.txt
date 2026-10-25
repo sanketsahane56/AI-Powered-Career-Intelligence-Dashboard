@@ -1,0 +1,38 @@
+ALEX MORGAN
+alex.morgan.dev@gmail.com | (415) 890-2341 | San Francisco, CA
+linkedin.com/in/alexmorgan-eng | github.com/alexmorgan-dev
+
+PROFESSIONAL SUMMARY
+Senior Full Stack Engineer with 6+ years of experience architecting distributed systems, resilient microservices, and high-performance cloud applications. Proven track record of scaling platforms to 10M+ active users, optimizing database performance by 45%, and leading cross-functional engineering teams.
+
+TECHNICAL SKILLS
+• Programming Languages: Python, JavaScript, TypeScript, Go, SQL, HTML5, CSS3, Bash
+• Frameworks & Libraries: React, Next.js, Node.js, Express, Flask, FastAPI, Django, Redux, Tailwind CSS
+• Cloud & DevOps: AWS (EC2, S3, RDS, Lambda), Docker, Kubernetes, CI/CD, GitHub Actions, Terraform, Linux, Nginx
+• Databases & Caching: PostgreSQL, MySQL, Redis, MongoDB, Elasticsearch, SQLAlchemy
+• Engineering Practices: System Design, Microservices, REST APIs, GraphQL, TDD, Agile, Scrum, Code Review
+
+PROFESSIONAL EXPERIENCE
+
+Senior Full Stack Engineer | CloudMatrix Solutions | San Francisco, CA
+March 2021 – Present
+• Architected and deployed a multi-tenant cloud analytics platform using Python, FastAPI, React, and PostgreSQL, supporting 2.5M daily active users.
+• Spearheaded database query optimization and Redis caching layer, reducing API latency from 450ms to 68ms (85% speedup).
+• Engineered automated CI/CD deployment pipelines using GitHub Actions and Docker, reducing release cycle time by 40%.
+• Mentored 5 junior and mid-level software engineers on clean architecture, unit testing with PyTest, and system scalability.
+• Orchestrated Kubernetes cluster autoscaling on AWS EKS, resulting in $120,000 annual cloud infrastructure cost savings.
+
+Software Engineer | Apex Digital Systems | Austin, TX
+July 2018 – February 2021
+• Developed customer-facing web applications using React, TypeScript, Node.js, and MongoDB, increasing user conversion by 28%.
+• Implemented secure JWT authentication and role-based access control (RBAC) across 14 microservices.
+• Integrated Stripe payment gateways and webhook handling, processing over $15M in annual transactions with 99.99% uptime.
+• Automated data extraction pipelines with Python and Pandas, reducing report generation duration by 65%.
+
+KEY PROJECTS
+• Real-Time Distributed Task Queue: Built an open-source task dispatcher in Go and Redis handling 50k req/sec with sub-5ms dispatch times.
+• CareerIQ Analytics Dashboard: Developed an ATS resume intelligence engine using Flask, SQLite, and Chart.js.
+
+EDUCATION
+Bachelor of Science in Computer Science | University of Texas at Austin | Graduated May 2018
+GPA: 3.8/4.0 | Dean's Honor Roll
