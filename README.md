@@ -10,7 +10,7 @@
 > **CareerIQ** is a modern, portfolio-ready Career Intelligence and ATS Resume Analytics platform. Built with Python, Flask, SQLite, and vanilla CSS/JS, it evaluates resumes across 5 transparent dimensions, extracts 500+ technical competencies, conducts dual radar skill-gap analyses against target job descriptions, and generates executive PDF reports—**100% locally with zero paid third-party API dependencies**.
 
 ### 🔗 Live Access & Deployment
-- **Live Public URL**: [https://careeriq-dashboard.loca.lt](https://careeriq-dashboard.loca.lt) *(Tunnel security password if prompted: `152.59.59.112`)*
+- **Live Public URL**: [https://careeriq-dashboard.loca.lt]([https://careeriq-dashboard.loca.lt](https://careeriq-dashboard.onrender.com)) *(Tunnel security password if prompted: `152.59.59.112`)*
 - **1-Click Cloud Deploy on Render**: [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)]([https://render.com/deploy?repo=https://github.com/sanketsahane56/AI-Powered-Career-Intelligence-Dashboard](https://careeriq-dashboard.onrender.com))
 
 ---
