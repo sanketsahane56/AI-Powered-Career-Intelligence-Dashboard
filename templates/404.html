@@ -1,17 +1,69 @@
 {% extends "base.html" %}
 
-{% block page_title %}Page Not Found{% endblock %}
+{% block page_title %}Page Not Found (404){% endblock %}
 
 {% block content %}
-<div style="text-align: center; padding: 80px 20px;">
-    <div style="font-family: 'Outfit', sans-serif; font-size: 5rem; font-weight: 800; color: #2563eb; line-height: 1;">404</div>
-    <h2 style="font-size: 1.5rem; margin-top: 12px; margin-bottom: 8px;">Intelligence Path Not Found</h2>
-    <p style="color: #64748b; font-size: 0.95rem; max-width: 450px; margin: 0 auto 24px;">
-        The career intelligence resource or analysis session you are looking for does not exist or has been relocated.
-    </p>
-    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
-        <i data-lucide="home"></i>
-        <span>Return to Dashboard</span>
-    </a>
+<div style="max-width: 800px; margin: 40px auto; text-align: center;">
+    <div class="card" style="padding: 48px 32px; border-radius: 16px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); position: relative; overflow: hidden;">
+        <!-- Glowing accent background glow -->
+        <div style="position: absolute; top: -50px; left: 50%; transform: translateX(-50%); width: 280px; height: 160px; background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, rgba(255, 255, 255, 0) 70%); pointer-events: none;"></div>
+
+        <span class="pill pill-blue" style="font-size: 0.8rem; margin-bottom: 16px; display: inline-flex; align-items: center; gap: 6px;">
+            <i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i>
+            HTTP 404 &bull; Resource Relocated
+        </span>
+
+        <div style="font-family: 'Outfit', sans-serif; font-size: 5.5rem; font-weight: 800; background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #38bdf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; margin-bottom: 12px; letter-spacing: -2px;">
+            404
+        </div>
+
+        <h2 style="font-size: 1.6rem; font-weight: 700; color: #0f172a; margin-bottom: 8px;">
+            Intelligence Path Not Found
+        </h2>
+
+        <p style="color: #64748b; font-size: 1rem; max-width: 500px; margin: 0 auto 32px; line-height: 1.6;">
+            The requested career intelligence session, candidate scan, or resource does not exist or has been moved to a new route.
+        </p>
+
+        <!-- Quick Navigation Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; text-align: left;">
+            <a href="{{ url_for('scanner') }}" class="card" style="padding: 16px; border: 1px solid #e2e8f0; border-radius: 10px; text-decoration: none; color: inherit; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#2563eb'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.transform='none';">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                    <div class="stat-icon blue" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                        <i data-lucide="file-search"></i>
+                    </div>
+                    <div style="font-weight: 600; font-size: 0.92rem; color: #0f172a;">ATS Scanner</div>
+                </div>
+                <div style="font-size: 0.78rem; color: #64748b;">Parse resume & evaluate transparent ATS score</div>
+            </a>
+
+            <a href="{{ url_for('job_match') }}" class="card" style="padding: 16px; border: 1px solid #e2e8f0; border-radius: 10px; text-decoration: none; color: inherit; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#2563eb'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.transform='none';">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                    <div class="stat-icon emerald" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                        <i data-lucide="crosshair"></i>
+                    </div>
+                    <div style="font-weight: 600; font-size: 0.92rem; color: #0f172a;">Job Gap Matcher</div>
+                </div>
+                <div style="font-size: 0.78rem; color: #64748b;">Benchmark skills against job descriptions</div>
+            </a>
+
+            <a href="{{ url_for('roles_explorer') }}" class="card" style="padding: 16px; border: 1px solid #e2e8f0; border-radius: 10px; text-decoration: none; color: inherit; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#2563eb'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.transform='none';">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                    <div class="stat-icon violet" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                        <i data-lucide="compass"></i>
+                    </div>
+                    <div style="font-weight: 600; font-size: 0.92rem; color: #0f172a;">Career Roles</div>
+                </div>
+                <div style="font-size: 0.78rem; color: #64748b;">Explore benchmarks across 8 market tracks</div>
+            </a>
+        </div>
+
+        <div>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary" style="padding: 10px 24px; font-size: 0.92rem;">
+                <i data-lucide="home"></i>
+                <span>Return to Executive Dashboard</span>
+            </a>
+        </div>
+    </div>
 </div>
 {% endblock %}
