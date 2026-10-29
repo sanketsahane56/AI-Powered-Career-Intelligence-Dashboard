@@ -5,7 +5,8 @@
 [![Flask 3.1+](https://img.shields.io/badge/Flask-3.1+-000000.svg?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![Chart.js 4.4](https://img.shields.io/badge/Visualizations-Chart.js_4.4-FF6384.svg?logo=chartdotjs&logoColor=white)](https://www.chartjs.org/)
 [![SQLite](https://img.shields.io/badge/Database-SQLite-003B57.svg?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![Tests](https://img.shields.io/badge/Tests-21%20Passed-10B981.svg)]()
+[![CI](https://github.com/sanketsahane56/AI-Powered-Career-Intelligence-Dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/sanketsahane56/AI-Powered-Career-Intelligence-Dashboard/actions)
+[![Tests](https://img.shields.io/badge/Tests-24%20Passed-10B981.svg)]()
 
 > **CareerIQ** is a modern, portfolio-ready Career Intelligence and ATS Resume Analytics platform. Built with Python, Flask, SQLite, and vanilla CSS/JS, it evaluates resumes across 5 transparent dimensions, extracts 500+ technical competencies, conducts dual radar skill-gap analyses against target job descriptions, and generates executive PDF reports—**100% locally with zero paid third-party API dependencies**.
 
@@ -52,7 +53,7 @@
   - Automatically records every analysis session in a local SQLite database (`data/careeriq.db`).
   - View previous scans, inspect previous scores, download reports, or compare with new jobs.
 - **1-Click Multi-Domain Demo Preloaders**:
-  - Instantly test with 1 click across Software Engineering, Product Management, Data Science, UI/UX Design, and Growth Marketing sample profiles (`data/sample_resume_*.txt`).
+  - Instantly test with 1 click across Software Engineering, Product Management, Data Science, UI/UX Design, Growth Marketing, and Finance sample profiles (`data/sample_resume_*.txt`).
 - **Zero Paid AI Dependencies & 100% Privacy**:
   - All parsing and scoring algorithms run locally via transparent rule-based heuristics and NLP tokenization. No data is sent to external paid AI APIs.
 
@@ -87,6 +88,7 @@ graph TD
 | Layer | Technology | Purpose |
 |---|---|---|
 | **Backend** | Python 3.10+, Flask 3.1 | Web application framework and REST APIs |
+| **CLI Tool** | `cli.py` (Argparse) | Terminal-based automated resume analysis and gap matching |
 | **PDF Extraction** | `pypdf` | Fast, secure text extraction from PDF documents |
 | **Reporting** | `reportlab` | Vector-rendered executive PDF report generator |
 | **Data & Storage** | SQLite, Pandas | Session persistence and analytical aggregations |
@@ -94,7 +96,7 @@ graph TD
 | **Frontend UI** | HTML5, Vanilla Modern CSS | Dark navy sidebar (`#0F172A`), electric blue accents |
 | **Data Viz** | Chart.js 4.4 | Radar charts, gauge metrics, and comparative graphs |
 | **Icons & Fonts** | Lucide Icons, Google Fonts (Outfit & Inter) | Crisp typography and vector icons |
-| **Testing** | `pytest` | Comprehensive unit and integration test suite (21 tests) |
+| **Testing & CI** | `pytest`, GitHub Actions | Comprehensive test suite (24 tests) across Python 3.10 & 3.11 |
 
 ---
 
@@ -133,7 +135,7 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-### 5. Run the Application
+### 5. Run the Web Application
 **Development Mode:**
 ```bash
 python app.py
@@ -145,11 +147,24 @@ python wsgi.py
 ```
 Open your browser and navigate to: **`http://localhost:5000`**
 
+### 6. Command-Line Interface (CLI Mode)
+Analyze resumes or compute skill gaps directly from the command line:
+```bash
+# Scan a candidate resume (PDF or TXT)
+python cli.py scan data/sample_resume.txt
+
+# Output structured JSON for automation & CI pipelines
+python cli.py scan data/sample_resume.txt --json
+
+# Compare resume against a target job description
+python cli.py compare data/sample_resume.txt "Seeking a Python, Docker, and PostgreSQL engineer"
+```
+
 ---
 
 ## 🧪 Running Automated Tests
 
-Run the full automated test suite covering extraction, scoring heuristics, database persistence, PDF report generation, multi-domain sample APIs, and routes:
+Run the full automated test suite covering extraction, scoring heuristics, database persistence, PDF report generation, multi-domain sample APIs, CLI tool, and routes:
 
 ```bash
 pytest -v
@@ -158,6 +173,7 @@ pytest -v
 ### Test Coverage Summary:
 - `tests/test_extractor.py`: PDF stream parsing, plain text normalization, metadata regex.
 - `tests/test_analyzer.py`: Skill taxonomy extraction, metric detection, verb scoring, job gap analyzer.
+- `tests/test_cli.py`: Terminal resume scanning, JSON export validation, and command-line gap matching.
 - `tests/test_db.py`: SQLite schema initialization, session CRUD operations, aggregate statistics.
 - `tests/test_report.py`: In-memory PDF document generation with valid `%PDF-` binary output.
 - `tests/test_routes.py`: Web page routes (`/`, `/scanner`, `/job-match`, `/roles`, `/history`, `/guide`), Multi-domain Sample Resume API, Job Gap Compare API, Delete Analysis API, and custom 404 handler.
