@@ -1,0 +1,30 @@
+LIAM KAUFMAN
+liam.kaufman.fin@gmail.com | (212) 555-4321 | New York, NY
+linkedin.com/in/liamkaufman-finance
+
+PROFESSIONAL SUMMARY
+Quantitative Financial Analyst and Business Intelligence Specialist with 6+ years of experience in corporate finance, financial modeling, and investment analytics. Demonstrated track record of optimizing capital allocation models, forecasting $120M annual operating budgets within 1.8% variance, and automating executive dashboards with Python and SQL.
+
+CORE COMPETENCIES & PLATFORMS
+• Financial & Quantitative Modeling: Financial Modeling, DCF (Discounted Cash Flow), Forecasting, Budgeting, Valuation, Variance Analysis, Capital Allocation
+• Analytics & BI Tools: SQL, Python (Pandas, NumPy), Excel (Advanced Formulas, VBA, Pivot Tables), PowerBI, Tableau, Financial Reporting
+• Risk & Accounting: Risk Management, Risk Analysis, Financial Analysis, Accounting, Cash Flow Modeling, Auditing, ERP (SAP, Oracle Financials)
+
+PROFESSIONAL EXPERIENCE
+Senior Financial Analyst | Apex Capital Partners | New York, NY
+June 2021 – Present
+• Engineered three-statement integrated financial forecasting models for 14 portfolio assets valued at $450M+, improving valuation accuracy by 28%.
+• Automated automated variance reporting workflows using Python and PostgreSQL, reducing monthly financial close cycle from 9 business days to 3 days.
+• Built interactive PowerBI executive KPI dashboards tracking liquidity, burn rate, ARR, and ROI, used weekly by C-level leadership.
+• Led sensitivity analysis on interest rate scenarios, identifying $4.2M in capital hedging opportunities.
+
+Financial & BI Analyst | Horizon Global Media | Boston, MA
+August 2018 – May 2021
+• Managed annual OPEX and CAPEX budget planning cycles totaling $85M across 6 operational business units.
+• Formulated cost optimization models that consolidated software licensing expenditures, achieving $1.6M annual savings.
+• Partnered with data engineering teams to establish automated SQL ETL pipelines feeding daily revenue reconciliation reports.
+• Authored comprehensive investment memos and M&A due diligence packages for 3 successful corporate acquisitions.
+
+EDUCATION
+Bachelor of Science in Finance & Quantitative Economics | New York University (NYU Stern) | 2018
+• Honors: Magna Cum Laude | CFA Level II Candidate

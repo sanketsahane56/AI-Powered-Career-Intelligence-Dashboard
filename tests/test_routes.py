@@ -66,6 +66,13 @@ def test_sample_resume_api(client):
     assert data_mktg["success"] is True
     assert "SARAH JENKINS" in data_mktg["text"]
 
+    # Finance domain
+    res_fin = client.get("/api/sample-resume?domain=finance")
+    assert res_fin.status_code == 200
+    data_fin = res_fin.get_json()
+    assert data_fin["success"] is True
+    assert "LIAM KAUFMAN" in data_fin["text"]
+
 
 def test_analyze_resume_api_text(client):
     sample_text = """
