@@ -53,9 +53,22 @@
   - Automatically records every analysis session in a local SQLite database (`data/careeriq.db`).
   - View previous scans, inspect previous scores, download reports, or compare with new jobs.
 - **1-Click Multi-Domain Demo Preloaders**:
-  - Instantly test with 1 click across Software Engineering, Product Management, Data Science, UI/UX Design, Growth Marketing, and Finance sample profiles (`data/sample_resume_*.txt`).
+  - Instantly test with 1 click across Software Engineering, Product Management, Data Science, UI/UX Design, Growth Marketing, Finance, Human Resources, and Cybersecurity sample profiles (`data/sample_resume_*.txt`).
 - **Zero Paid AI Dependencies & 100% Privacy**:
   - All parsing and scoring algorithms run locally via transparent rule-based heuristics and NLP tokenization. No data is sent to external paid AI APIs.
+
+---
+
+## 📚 Documentation & Specifications
+
+Explore in-depth documentation and technical design guides in [`docs/`](docs/):
+
+- 🏛️ [Technical Architecture Specification](docs/ARCHITECTURE.md) - Pipeline data flow, system layers, and SQLite schema.
+- 📡 [REST API Reference](docs/API.md) - Endpoints, payload schemas, and response formats.
+- 🧮 [ATS Scoring Methodology](docs/ATS_SCORING_METHODOLOGY.md) - Mathematical formulas, dimension weights, and scoring rubrics.
+- 🤝 [Contributing Guidelines](CONTRIBUTING.md) - Local setup, branching model, and PR requirements.
+- 🛡️ [Security Policy](SECURITY.md) - Vulnerability disclosure timelines and defensive boundaries.
+- 📜 [Code of Conduct](CODE_OF_CONDUCT.md) - Contributor Covenant standards.
 
 ---
 
@@ -192,18 +205,21 @@ This repository includes a native **`render.yaml`** blueprint for automatic depl
 5. Render will automatically detect `render.yaml`, install `requirements.txt`, and run `gunicorn wsgi:app`.
 6. Your live website URL will be provisioned automatically (e.g. `https://careeriq-dashboard.onrender.com`).
 
-### Option 2: Deploy on Railway / Heroku
-The included **`Procfile`** contains the standard web process command:
+### Option 2: Deploy with Docker Compose
+Run the containerized application with persistent SQLite storage:
+```bash
+docker-compose up -d
 ```
-web: gunicorn wsgi:app
-```
-Connect your GitHub repository in the Railway or Heroku dashboard, and the platform will automatically build and deploy.
-
-### Option 3: Deploy with Docker
-Build and run the containerized application on any cloud or local Docker engine:
+Or build standard standalone Docker container:
 ```bash
 docker build -t careeriq-dashboard .
 docker run -p 5000:5000 careeriq-dashboard
+```
+
+### Option 3: Deploy on Railway / Heroku
+The included **`Procfile`** contains the standard web process command:
+```
+web: gunicorn wsgi:app
 ```
 
 ### Option 4: Deploy on Vercel
