@@ -52,6 +52,20 @@ def test_sample_resume_api(client):
     assert data_res["success"] is True
     assert "DAVID CHEN" in data_res["text"]
 
+    # Design domain
+    res_design = client.get("/api/sample-resume?domain=design")
+    assert res_design.status_code == 200
+    data_design = res_design.get_json()
+    assert data_design["success"] is True
+    assert "MAYA LIN" in data_design["text"]
+
+    # Marketing domain
+    res_mktg = client.get("/api/sample-resume?domain=marketing")
+    assert res_mktg.status_code == 200
+    data_mktg = res_mktg.get_json()
+    assert data_mktg["success"] is True
+    assert "SARAH JENKINS" in data_mktg["text"]
+
 
 def test_analyze_resume_api_text(client):
     sample_text = """
@@ -108,3 +122,12 @@ def test_404_page(client):
     res = client.get("/non-existent-route-xyz")
     assert res.status_code == 404
     assert b"404" in res.data
+
+
+def test_delete_analysis_api(client):
+    # Test deleting a session via API
+    res = client.delete("/api/analysis/non-existent-session-id")
+    assert res.status_code == 200
+    data = res.get_json()
+    assert "success" in data
+

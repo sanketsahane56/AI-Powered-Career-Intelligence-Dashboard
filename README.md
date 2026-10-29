@@ -5,7 +5,7 @@
 [![Flask 3.1+](https://img.shields.io/badge/Flask-3.1+-000000.svg?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![Chart.js 4.4](https://img.shields.io/badge/Visualizations-Chart.js_4.4-FF6384.svg?logo=chartdotjs&logoColor=white)](https://www.chartjs.org/)
 [![SQLite](https://img.shields.io/badge/Database-SQLite-003B57.svg?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![Tests](https://img.shields.io/badge/Tests-17%20Passed-10B981.svg)]()
+[![Tests](https://img.shields.io/badge/Tests-21%20Passed-10B981.svg)]()
 
 > **CareerIQ** is a modern, portfolio-ready Career Intelligence and ATS Resume Analytics platform. Built with Python, Flask, SQLite, and vanilla CSS/JS, it evaluates resumes across 5 transparent dimensions, extracts 500+ technical competencies, conducts dual radar skill-gap analyses against target job descriptions, and generates executive PDF reports—**100% locally with zero paid third-party API dependencies**.
 
@@ -34,15 +34,15 @@
 ## 🌟 Key Features
 
 - **Transparent 5-Dimension ATS Scoring**:
-  - **Skill Breadth & Diversity (30%)**: Analyzes breadth across 8 tech categories (Languages, Web, Backend, Cloud, Databases, AI/ML, System Design, Professional).
+  - **Skill Breadth & Diversity (30%)**: Analyzes breadth across tech and business categories (Languages, Web, Backend, Cloud, Databases, AI/ML, System Design, Product, Design, Marketing, Finance).
   - **Quantifiable Impact & Metrics (25%)**: Scans for percentages, dollar savings, throughput metrics, and user scales.
   - **Action Verbs & Voice (20%)**: Distinguishes leadership and engineering action verbs from passive phrasing.
   - **ATS Structure & Completeness (15%)**: Validates standard ATS sections (Experience, Skills, Education, Projects, Contact metadata).
   - **Readability & Formatting (10%)**: Evaluates word density, page structure, and bullet format.
 - **Deep Skill Extraction Engine**:
-  - Curated taxonomy of **500+ verified skills** with alias normalization (`k8s` &rarr; `Kubernetes`, `react.js` &rarr; `React`, `psql` &rarr; `PostgreSQL`).
+  - Curated taxonomy of **500+ verified skills** with alias normalization (`k8s` &rarr; `Kubernetes`, `react.js` &rarr; `React`, `psql` &rarr; `PostgreSQL`, `figma` &rarr; `Figma`).
 - **Target Role Compatibility**:
-  - Automatically benchmarks candidate skills against 8 market tracks: *Full Stack Engineer, Backend Engineer, Frontend Engineer, Data Scientist, ML Engineer, DevOps/Cloud, Data Engineer, Cybersecurity*.
+  - Automatically benchmarks candidate skills against top market tracks: *Full Stack Engineer, Backend Engineer, Frontend Engineer, Data Scientist, ML Engineer, DevOps/Cloud, Data Engineer, Cybersecurity, Product Manager, UI/UX Designer, Growth Marketer*.
 - **Job Description Gap Analysis**:
   - Paste any custom Job Description (or select built-in industry presets).
   - Computes match percentage, lists matched skills (green tags), high-priority skill gaps (red tags), and plots a dual **Resume vs Job Requirements Radar Chart**.
@@ -51,8 +51,8 @@
 - **SQLite Persistence & History**:
   - Automatically records every analysis session in a local SQLite database (`data/careeriq.db`).
   - View previous scans, inspect previous scores, download reports, or compare with new jobs.
-- **1-Click Live Demo Preloader**:
-  - Instantly load a pre-configured Senior Full Stack Engineer profile with 1 click.
+- **1-Click Multi-Domain Demo Preloaders**:
+  - Instantly test with 1 click across Software Engineering, Product Management, Data Science, UI/UX Design, and Growth Marketing sample profiles (`data/sample_resume_*.txt`).
 - **Zero Paid AI Dependencies & 100% Privacy**:
   - All parsing and scoring algorithms run locally via transparent rule-based heuristics and NLP tokenization. No data is sent to external paid AI APIs.
 
@@ -94,7 +94,7 @@ graph TD
 | **Frontend UI** | HTML5, Vanilla Modern CSS | Dark navy sidebar (`#0F172A`), electric blue accents |
 | **Data Viz** | Chart.js 4.4 | Radar charts, gauge metrics, and comparative graphs |
 | **Icons & Fonts** | Lucide Icons, Google Fonts (Outfit & Inter) | Crisp typography and vector icons |
-| **Testing** | `pytest` | Comprehensive unit and integration test suite (17 tests) |
+| **Testing** | `pytest` | Comprehensive unit and integration test suite (21 tests) |
 
 ---
 
@@ -149,7 +149,7 @@ Open your browser and navigate to: **`http://localhost:5000`**
 
 ## 🧪 Running Automated Tests
 
-Run the full automated test suite covering extraction, scoring heuristics, database persistence, PDF report generation, and API routes:
+Run the full automated test suite covering extraction, scoring heuristics, database persistence, PDF report generation, multi-domain sample APIs, and routes:
 
 ```bash
 pytest -v
@@ -160,7 +160,7 @@ pytest -v
 - `tests/test_analyzer.py`: Skill taxonomy extraction, metric detection, verb scoring, job gap analyzer.
 - `tests/test_db.py`: SQLite schema initialization, session CRUD operations, aggregate statistics.
 - `tests/test_report.py`: In-memory PDF document generation with valid `%PDF-` binary output.
-- `tests/test_routes.py`: Web page routes (`/`, `/scanner`, `/job-match`, `/roles`, `/history`, `/guide`), API endpoints, and custom 404 handler.
+- `tests/test_routes.py`: Web page routes (`/`, `/scanner`, `/job-match`, `/roles`, `/history`, `/guide`), Multi-domain Sample Resume API, Job Gap Compare API, Delete Analysis API, and custom 404 handler.
 
 ---
 
