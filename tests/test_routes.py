@@ -73,6 +73,20 @@ def test_sample_resume_api(client):
     assert data_fin["success"] is True
     assert "LIAM KAUFMAN" in data_fin["text"]
 
+    # HR domain
+    res_hr = client.get("/api/sample-resume?domain=hr")
+    assert res_hr.status_code == 200
+    data_hr = res_hr.get_json()
+    assert data_hr["success"] is True
+    assert "RACHEL GREENBERG" in data_hr["text"]
+
+    # Cybersecurity domain
+    res_sec = client.get("/api/sample-resume?domain=cybersecurity")
+    assert res_sec.status_code == 200
+    data_sec = res_sec.get_json()
+    assert data_sec["success"] is True
+    assert "ETHAN VANCE" in data_sec["text"]
+
 
 def test_analyze_resume_api_text(client):
     sample_text = """
