@@ -1,0 +1,32 @@
+PRIYA SHARMA
+priya.sharma.pm@gmail.com | (415) 789-1234 | San Francisco, CA
+linkedin.com/in/priyasharma-pm
+
+PROFESSIONAL SUMMARY
+Senior Product Manager with 5+ years of experience leading cross-functional teams to build high-scale B2B SaaS and consumer mobile products. Proven track record defining product strategy, accelerating sprint velocity by 35%, and driving $12M in ARR growth through data-driven feature prioritization.
+
+CORE COMPETENCIES & SKILLS
+• Product Leadership: Product Strategy, Product Roadmapping, PRD, User Stories, Feature Prioritization, MVP Definition
+• Agile & Execution: Agile, Scrum, Kanban, Jira, Confluence, Sprint Planning, Backlog Prioritization, OKRs
+• Analytics & Experimentation: A/B Testing, Google Analytics, KPI Dashboards, Customer Discovery, Market Research
+• Design & Collaboration: Figma, Wireframing, Stakeholder Management, User Research, Usability Testing
+
+PROFESSIONAL EXPERIENCE
+
+Senior Product Manager | CloudSphere Technologies | San Francisco, CA
+April 2021 – Present
+• Formulated quarterly product roadmapping and authored 30+ comprehensive PRDs for core SaaS billing platform.
+• Prioritized feature backlogs in Jira and ran bi-weekly Scrum sprint planning with an engineering team of 14.
+• Spearheaded onboarding flow redesign based on user research and usability testing, increasing activation rate by 42%.
+• Launched automated workflow integrations, driving $4.5M in annual contract value (ACV) within 6 months.
+• Defined company-wide product OKRs and tracked core funnel conversion metrics using Google Analytics and Mixpanel.
+
+Product Manager | MobileNest Apps | Austin, TX
+January 2019 – March 2021
+• Conceptualized and launched a mobile collaboration application scaled to 850,000 monthly active users (MAU).
+• Executed 25+ A/B Testing experiments optimizing checkout flows, improving subscription conversion rate by 22%.
+• Conducted 50+ qualitative customer discovery interviews to uncover critical pain points and inform roadmap priorities.
+• Partnered closely with UI/UX designers in Figma to build interactive prototypes for user validation sessions.
+
+EDUCATION
+Bachelor of Science in Business Administration & Information Systems | UC Berkeley | Graduated 2018

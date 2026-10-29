@@ -16,7 +16,7 @@ from config import Config
 from engine.extractor import ResumeExtractor
 from engine.analyzer import CareerAnalyzer
 from engine.skills_taxonomy import (
-    SKILLS_TAXONOMY, CAREER_PROFILES, SAMPLE_JOB_DESCRIPTIONS
+    DOMAINS, SKILLS_TAXONOMY, CAREER_PROFILES, SAMPLE_JOB_DESCRIPTIONS
 )
 from engine.report_generator import ReportGenerator
 from database.db import Database
@@ -48,13 +48,14 @@ def dashboard():
         "dashboard.html",
         stats=stats,
         recent_scans=recent_scans,
+        domains=DOMAINS,
         active_page="dashboard"
     )
 
 
 @app.route("/scanner")
 def scanner():
-    """Interactive ATS Resume Scanner page."""
+    """Interactive ATS Resume Scanner page with multi-domain intelligence."""
     session_id = request.args.get("session_id")
     existing_data = None
     if session_id:
@@ -62,13 +63,14 @@ def scanner():
     return render_template(
         "scanner.html",
         active_page="scanner",
-        existing_data=existing_data
+        existing_data=existing_data,
+        domains=DOMAINS
     )
 
 
 @app.route("/job-match")
 def job_match():
-    """Job Description comparison and skill gap analyzer."""
+    """Job Description comparison and skill gap analyzer across domains."""
     session_id = request.args.get("session_id")
     skills_list = []
     candidate_name = ""
@@ -82,6 +84,7 @@ def job_match():
         "job_match.html",
         active_page="job_match",
         presets=SAMPLE_JOB_DESCRIPTIONS,
+        domains=DOMAINS,
         skills_list=skills_list,
         candidate_name=candidate_name
     )
@@ -89,11 +92,12 @@ def job_match():
 
 @app.route("/roles")
 def roles_explorer():
-    """Career role market taxonomy and skill requirements explorer."""
+    """Career role market taxonomy and skill requirements explorer across multiple domains."""
     return render_template(
         "roles.html",
         active_page="roles",
-        roles=CAREER_PROFILES
+        roles=CAREER_PROFILES,
+        domains=DOMAINS
     )
 
 
@@ -225,13 +229,27 @@ def api_compare_job():
 
 @app.route("/api/sample-resume", methods=["GET"])
 def api_sample_resume():
-    """Returns the pre-loaded sample resume for 1-click testing."""
-    sample_path = Config.BASE_DIR / "data/sample_resume.txt"
+    """Returns pre-loaded sample resumes for 1-click testing across multiple domains."""
+    domain = request.args.get("domain", "software").lower()
+    domain_file_map = {
+        "software": "sample_resume.txt",
+        "product": "sample_resume_product.txt",
+        "data": "sample_resume_data.txt",
+        "design": "sample_resume_design.txt",
+        "marketing": "sample_resume_marketing.txt"
+    }
+    filename = domain_file_map.get(domain, "sample_resume.txt")
+    sample_path = Config.BASE_DIR / "data" / filename
     if sample_path.exists():
         with open(sample_path, "r", encoding="utf-8") as f:
             content = f.read()
-        return jsonify({"success": True, "text": content})
-    return jsonify({"success": False, "error": "Sample resume not found."}), 404
+        return jsonify({
+            "success": True,
+            "domain": domain,
+            "filename": filename,
+            "text": content
+        })
+    return jsonify({"success": False, "error": f"Sample resume for {domain} not found."}), 404
 
 
 @app.route("/api/download-report/<session_id>", methods=["GET"])
@@ -244,6 +262,7 @@ def api_download_report(session_id: str):
 
     analysis_data = {
         "overall_score": record.get("overall_score", 0),
+        "primary_domain": record.get("top_domain", "Software & Cloud"),
         "dimensions": record.get("dimensions", {}),
         "skills": record.get("skills", {}),
         "metrics": {"count": record.get("word_count", 0)},

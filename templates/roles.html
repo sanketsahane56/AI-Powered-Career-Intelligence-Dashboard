@@ -1,28 +1,100 @@
 {% extends "base.html" %}
 
-{% block page_title %}Career Role Market Taxonomy & Profiles{% endblock %}
+{% block page_title %}Multi-Domain Career Roles & Market Profiles{% endblock %}
 
 {% block content %}
-<div class="card" style="margin-bottom: 28px; background: linear-gradient(135deg, #0b132b 0%, #1e293b 100%); color: #ffffff;">
-    <h2 style="color: #ffffff; font-size: 1.6rem; margin-bottom: 8px;">Explore Standard Market Career Profiles</h2>
-    <p style="color: #94a3b8; font-size: 0.95rem; max-width: 750px;">
-        CareerIQ maps technical resumes against verified industry job profiles. Discover the core technical requirements, secondary scaling competencies, and responsibilities expected across modern engineering tiers.
-    </p>
+<!-- Header Hero -->
+<div class="card" style="margin-bottom: 24px; background: linear-gradient(135deg, #0b132b 0%, #1e293b 100%); color: #ffffff;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <span class="pill pill-blue" style="background: rgba(37,99,235,0.3); border-color: rgba(59,130,246,0.5); color: #93c5fd;">
+                    <i data-lucide="layers"></i> 8 Industry Domains • 20 Standard Profiles
+                </span>
+            </div>
+            <h2 style="color: #ffffff; font-size: 1.6rem; margin-bottom: 8px;">Multi-Domain Career Taxonomy & Market Profiles</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem; max-width: 800px; margin: 0;">
+                CareerIQ benchmarks resumes across tech, data science, product management, design, digital marketing, finance, HR, and sales. Explore verified must-have core skills, scaling tools, and role expectations.
+            </p>
+        </div>
+        <div>
+            <a href="{{ url_for('scanner') }}" class="btn btn-primary">
+                <i data-lucide="scan"></i>
+                <span>Scan My Resume Alignment</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Domain Filter Bar & Search -->
+<div class="card" style="margin-bottom: 24px; padding: 18px 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 14px;">
+        <!-- Domain Tabs -->
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="domain-filters">
+            <button type="button" class="btn btn-sm domain-filter-btn active" data-domain="all" style="border-radius: 20px; font-weight: 600;">
+                All Domains ({{ roles|length }})
+            </button>
+            {% for dom_name, dom_info in domains.items() %}
+            <button type="button" class="btn btn-sm btn-secondary domain-filter-btn" data-domain="{{ dom_name }}" style="border-radius: 20px; font-weight: 500;">
+                <i data-lucide="{{ dom_info.icon }}" style="width: 14px; height: 14px;"></i>
+                <span>{{ dom_name }}</span>
+            </button>
+            {% endfor %}
+        </div>
+
+        <!-- Search Input -->
+        <div style="min-width: 260px; max-width: 340px; flex: 1;">
+            <div style="position: relative;">
+                <input type="text" id="role-search-input" placeholder="Search roles, tools, skills (e.g. Python, Figma, PRD, SEO, SQL, Excel)..." style="width: 100%; padding: 8px 12px 8px 36px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 0.85rem;">
+                <i data-lucide="search" style="position: absolute; left: 10px; top: 9px; width: 16px; height: 16px; color: #94a3b8;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active domain count badge -->
+    <div style="font-size: 0.8rem; color: #64748b; display: flex; align-items: center; gap: 8px;">
+        <span>Showing <strong id="visible-role-count">{{ roles|length }}</strong> standard career profiles</span>
+        <span id="active-filter-badge" class="pill pill-gray" style="display: none;"></span>
+    </div>
 </div>
 
 <!-- Roles Grid -->
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+<div id="roles-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 24px;">
     {% for key, role in roles.items() %}
-    <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+    {% set dom = role.domain %}
+    {% set badge_class = 'pill-blue' %}
+    {% if dom == 'Data & AI' %}{% set badge_class = 'pill-emerald' %}
+    {% elif dom == 'Product & Project Management' %}{% set badge_class = 'pill-violet' %}
+    {% elif dom == 'UI/UX & Design' %}{% set badge_class = 'pill-blue' %}
+    {% elif dom == 'Digital Marketing & Growth' %}{% set badge_class = 'pill-amber' %}
+    {% elif dom == 'Finance & Accounting' %}{% set badge_class = 'pill-emerald' %}
+    {% elif dom == 'Human Resources & Talent' %}{% set badge_class = 'pill-blue' %}
+    {% elif dom == 'Sales & Business Development' %}{% set badge_class = 'pill-violet' %}
+    {% endif %}
+
+    <div class="card role-card" 
+         data-domain="{{ role.domain }}" 
+         data-keywords="{{ role.title.lower() }} {{ role.domain.lower() }} {{ role.core_skills|join(' ')|lower }} {{ role.secondary_skills|join(' ')|lower }}"
+         style="display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.15s ease, box-shadow 0.15s ease;">
         <div>
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
-                <div class="stat-icon blue" style="width: 42px; height: 42px;">
-                    <i data-lucide="{{ role.icon }}"></i>
+            <!-- Header -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="stat-icon blue" style="width: 40px; height: 40px;">
+                        <i data-lucide="{{ role.icon }}"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0; line-height: 1.25;">{{ role.title }}</h3>
+                    </div>
                 </div>
-                <div>
-                    <h3 style="font-size: 1.15rem; font-weight: 700;">{{ role.title }}</h3>
-                    <span class="pill pill-blue" style="font-size: 0.72rem;">Engineering Track</span>
-                </div>
+            </div>
+
+            <!-- Domain Pill -->
+            <div style="margin-bottom: 12px;">
+                <span class="pill {{ badge_class }}" style="font-size: 0.72rem;">
+                    <i data-lucide="tag" style="width: 11px; height: 11px;"></i>
+                    {{ role.domain }}
+                </span>
             </div>
 
             <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 16px; line-height: 1.45;">
@@ -31,30 +103,32 @@
 
             <!-- Core Skills -->
             <div style="margin-bottom: 14px;">
-                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; margin-bottom: 6px;">
-                    Core Competencies (Must-Have)
+                <div style="font-size: 0.73rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; margin-bottom: 6px; display: flex; justify-content: space-between;">
+                    <span>Core Competencies (Must-Have)</span>
+                    <span style="color: #94a3b8;">{{ role.core_skills|length }} skills</span>
                 </div>
                 <div class="skill-tags">
                     {% for skill in role.core_skills %}
-                        <span class="skill-tag" style="background: #eff6ff; color: #1e40af; border-color: #bfdbfe;">{{ skill }}</span>
+                        <span class="skill-tag" style="background: #eff6ff; color: #1e40af; border-color: #bfdbfe; font-size: 0.76rem;">{{ skill }}</span>
                     {% endfor %}
                 </div>
             </div>
 
             <!-- Secondary Skills -->
             <div style="margin-bottom: 16px;">
-                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 6px;">
-                    Secondary & Scaling Tools
+                <div style="font-size: 0.73rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 6px; display: flex; justify-content: space-between;">
+                    <span>Secondary & Scaling Tools</span>
+                    <span style="color: #94a3b8;">{{ role.secondary_skills|length }} tools</span>
                 </div>
                 <div class="skill-tags">
                     {% for skill in role.secondary_skills %}
-                        <span class="skill-tag">{{ skill }}</span>
+                        <span class="skill-tag" style="font-size: 0.76rem;">{{ skill }}</span>
                     {% endfor %}
                 </div>
             </div>
         </div>
 
-        <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-top: 8px;">
+        <div style="border-top: 1px solid #f1f5f9; padding-top: 12px; margin-top: 8px;">
             <a href="{{ url_for('scanner') }}" class="btn btn-secondary btn-sm" style="width: 100%;">
                 <i data-lucide="scan"></i>
                 <span>Check My Alignment</span>
@@ -63,4 +137,111 @@
     </div>
     {% endfor %}
 </div>
+
+<!-- No Results Found State -->
+<div id="no-roles-found" class="card" style="display: none; text-align: center; padding: 48px 24px; margin-top: 20px;">
+    <div style="font-size: 2.5rem; margin-bottom: 12px; color: #94a3b8;">
+        <i data-lucide="help-circle" style="width: 48px; height: 48px;"></i>
+    </div>
+    <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 6px;">No Matching Profiles Found</h3>
+    <p style="color: #64748b; font-size: 0.9rem; max-width: 450px; margin: 0 auto 16px;">
+        We could not find any career profiles matching your search query. Try searching for broader terms like "data", "engineer", "manager", or "design".
+    </p>
+    <button type="button" class="btn btn-primary btn-sm" id="btn-reset-filters">
+        <i data-lucide="rotate-ccw"></i>
+        <span>Reset Domain & Search Filters</span>
+    </button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const filterBtns = document.querySelectorAll('.domain-filter-btn');
+    const searchInput = document.getElementById('role-search-input');
+    const roleCards = document.querySelectorAll('.role-card');
+    const visibleCountEl = document.getElementById('visible-role-count');
+    const noResultsEl = document.getElementById('no-roles-found');
+    const resetBtn = document.getElementById('btn-reset-filters');
+    const activeBadge = document.getElementById('active-filter-badge');
+
+    let currentDomain = 'all';
+    let searchQuery = '';
+
+    function filterRoles() {
+        let visibleCount = 0;
+
+        roleCards.forEach(card => {
+            const cardDomain = card.getAttribute('data-domain') || '';
+            const cardKeywords = (card.getAttribute('data-keywords') || '').toLowerCase();
+
+            const matchesDomain = (currentDomain === 'all' || cardDomain.toLowerCase() === currentDomain.toLowerCase());
+            const matchesSearch = (!searchQuery || cardKeywords.includes(searchQuery));
+
+            if (matchesDomain && matchesSearch) {
+                card.style.display = 'flex';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        if (visibleCountEl) visibleCountEl.textContent = visibleCount;
+
+        if (visibleCount === 0) {
+            if (noResultsEl) noResultsEl.style.display = 'block';
+        } else {
+            if (noResultsEl) noResultsEl.style.display = 'none';
+        }
+
+        if (activeBadge) {
+            if (currentDomain !== 'all') {
+                activeBadge.style.display = 'inline-flex';
+                activeBadge.textContent = currentDomain;
+            } else {
+                activeBadge.style.display = 'none';
+            }
+        }
+    }
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => {
+                b.classList.remove('active');
+                b.classList.add('btn-secondary');
+            });
+            btn.classList.add('active');
+            btn.classList.remove('btn-secondary');
+
+            currentDomain = btn.getAttribute('data-domain');
+            filterRoles();
+        });
+    });
+
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.trim().toLowerCase();
+            filterRoles();
+        });
+    }
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            currentDomain = 'all';
+            searchQuery = '';
+            if (searchInput) searchInput.value = '';
+            filterBtns.forEach(b => {
+                if (b.getAttribute('data-domain') === 'all') {
+                    b.classList.add('active');
+                    b.classList.remove('btn-secondary');
+                } else {
+                    b.classList.remove('active');
+                    b.classList.add('btn-secondary');
+                }
+            });
+            filterRoles();
+        });
+    }
+});
+</script>
 {% endblock %}

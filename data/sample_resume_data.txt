@@ -1,0 +1,32 @@
+DAVID CHEN
+david.chen.analytics@gmail.com | (206) 555-4321 | Seattle, WA
+linkedin.com/in/davidchen-data
+
+PROFESSIONAL SUMMARY
+Senior Data Analyst & Business Intelligence Specialist with 5+ years of experience transforming raw data into high-impact executive dashboards and predictive insights. Expert in SQL, Power BI, Tableau, Advanced Excel, and statistical modeling with a track record of identifying $3.2M in annual cost efficiencies.
+
+CORE SKILLS & TECHNOLOGIES
+• Business Intelligence: Power BI, Tableau, Looker, Excel, Advanced Excel, DAX, KPI Dashboards
+• Data Engineering & Querying: SQL, PostgreSQL, Snowflake, BigQuery, Data Cleansing, Data Modeling, ETL
+• Statistical & Quantitative: Python, Pandas, Statistical Analysis, A/B Testing, Predictive Modeling, Cohort Analysis
+• Professional: Data Visualization, Stakeholder Management, Client Presentation, Problem Solving
+
+PROFESSIONAL EXPERIENCE
+
+Senior Data Analyst | InsightEdge Global | Seattle, WA
+February 2021 – Present
+• Architected 15+ automated enterprise KPI Dashboards in Power BI and Tableau supporting 400+ business stakeholders.
+• Wrote complex SQL queries, window functions, and data cleansing scripts across 50M+ rows in Snowflake.
+• Partnered with marketing leadership to design and analyze A/B Testing campaigns, increasing digital lead conversion by 31%.
+• Developed predictive churn models using Python and Pandas, reducing quarterly enterprise churn by 18%.
+• Standardized DAX measures and established single-source-of-truth semantic data models across the organization.
+
+Data Analyst | Pacific Retail Solutions | Portland, OR
+June 2018 – January 2021
+• Built Advanced Excel financial models and automated reporting schedules, saving 25 team hours per week.
+• Analyzed retail transaction trends with SQL and PostgreSQL, uncovering inventory bottlenecks and saving $1.4M annually.
+• Presented weekly cohort analysis and customer retention insights to executive vice presidents.
+• Conducted data modeling and ETL pipeline maintenance in collaboration with data engineering teams.
+
+EDUCATION
+Bachelor of Science in Statistics & Data Analytics | University of Washington | Graduated 2018

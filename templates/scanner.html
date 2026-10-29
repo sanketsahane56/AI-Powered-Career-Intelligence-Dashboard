@@ -10,10 +10,20 @@
             <h2 class="card-title"><i data-lucide="file-search"></i> Input Resume Document</h2>
             <p class="card-subtitle">Upload a PDF or paste text to perform automated ATS heuristic parsing and skill extraction</p>
         </div>
-        <button type="button" class="btn btn-secondary btn-sm" id="btn-load-sample">
-            <i data-lucide="sparkles"></i>
-            <span>Load Sample Resume</span>
-        </button>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <label for="sample-domain-select" style="font-size: 0.8rem; color: #64748b; font-weight: 600;">Sample Resume:</label>
+            <select id="sample-domain-select" style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.82rem; font-family: inherit; background: #ffffff;">
+                <option value="software">💻 Full Stack Software Engineer (Tech)</option>
+                <option value="product">🎯 Senior Product Manager (Product)</option>
+                <option value="data">📊 Senior Data Analyst & BI (Data/AI)</option>
+                <option value="design">🎨 UI/UX & Product Designer (Design)</option>
+                <option value="marketing">🚀 Growth & Digital Marketing (Marketing)</option>
+            </select>
+            <button type="button" class="btn btn-violet btn-sm" id="btn-load-sample">
+                <i data-lucide="sparkles"></i>
+                <span>Load Sample</span>
+            </button>
+        </div>
     </div>
 
     <form id="scanner-form">
@@ -35,7 +45,7 @@
                 </div>
                 <h4 style="font-size: 1.05rem; margin-bottom: 6px;">Drag and drop your Resume PDF here</h4>
                 <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 14px;">
-                    Supports searchable PDF files (Max 10MB)
+                    Supports searchable PDF files across all domains (Max 10MB)
                 </p>
                 <div id="selected-file-name" style="margin-bottom: 12px;"></div>
                 <input type="file" id="resume-file-input" accept=".pdf,.txt" style="display: none;">
@@ -65,12 +75,16 @@
     <div class="card" style="margin-bottom: 24px; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
             <div>
-                <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                     <h2 id="res-candidate-name" style="font-size: 1.5rem; font-weight: 700;">
                         {{ existing_data.candidate_name if existing_data else 'Candidate' }}
                     </h2>
                     <span class="pill pill-blue" id="res-doc-meta">
                         {{ existing_data.word_count if existing_data else '0' }} words • {{ existing_data.page_count if existing_data else '1' }} pages
+                    </span>
+                    <span class="pill pill-emerald" id="res-primary-domain" style="display: none;">
+                        <i data-lucide="compass" style="width: 12px; height: 12px;"></i>
+                        <span id="res-primary-domain-text">Domain</span>
                     </span>
                 </div>
                 <div style="display: flex; gap: 16px; margin-top: 6px; font-size: 0.85rem; color: #64748b;">
@@ -113,7 +127,7 @@
                         COMPUTING FIT...
                     </div>
                     <p style="font-size: 0.82rem; color: #64748b; max-width: 320px;">
-                        Transparently evaluated across technical competencies, measurable achievements, active voice, and formatting structure.
+                        Transparently evaluated across domain competencies, measurable achievements, active voice, and formatting structure.
                     </p>
                 </div>
             </div>
@@ -142,8 +156,8 @@
             <!-- Competency Radar Chart -->
             <div class="card">
                 <div class="card-header" style="margin-bottom: 10px;">
-                    <h3 class="card-title"><i data-lucide="radar"></i> Technical Competency Balance</h3>
-                    <span class="pill pill-blue">8 Domains</span>
+                    <h3 class="card-title"><i data-lucide="radar"></i> Competency Balance</h3>
+                    <span class="pill pill-blue">Multi-Domain Taxonomy</span>
                 </div>
                 <div style="height: 260px; position: relative;">
                     <canvas id="skillsRadarCanvas"></canvas>
@@ -152,9 +166,15 @@
 
             <!-- Role Compatibility Matches -->
             <div class="card">
-                <div class="card-header" style="margin-bottom: 12px;">
-                    <h3 class="card-title"><i data-lucide="compass"></i> Top Role Alignments</h3>
-                    <span class="pill pill-emerald">Market Profiles</span>
+                <div class="card-header" style="margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                        <h3 class="card-title"><i data-lucide="compass"></i> Top Role Alignments</h3>
+                        <span class="pill pill-emerald">Market Profiles</span>
+                    </div>
+                    <div style="display: flex; gap: 6px;" id="role-filter-controls">
+                        <button type="button" class="btn btn-sm btn-primary role-toggle-btn" data-filter="all" style="font-size: 0.72rem; padding: 4px 8px;">All Roles</button>
+                        <button type="button" class="btn btn-sm btn-secondary role-toggle-btn" data-filter="domain" style="font-size: 0.72rem; padding: 4px 8px;">Primary Domain</button>
+                    </div>
                 </div>
                 <div id="res-role-matches">
                     <!-- Populated by JavaScript -->

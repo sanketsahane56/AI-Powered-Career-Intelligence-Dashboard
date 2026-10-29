@@ -31,11 +31,26 @@ def test_page_routes(client):
 
 
 def test_sample_resume_api(client):
+    # Default (tech)
     res = client.get("/api/sample-resume")
     assert res.status_code == 200
     data = res.get_json()
     assert data["success"] is True
     assert "ALEX MORGAN" in data["text"]
+
+    # Product domain
+    res_pm = client.get("/api/sample-resume?domain=product")
+    assert res_pm.status_code == 200
+    data_pm = res_pm.get_json()
+    assert data_pm["success"] is True
+    assert "PRIYA SHARMA" in data_pm["text"]
+
+    # Data domain
+    res_data = client.get("/api/sample-resume?domain=data")
+    assert res_data.status_code == 200
+    data_res = res_data.get_json()
+    assert data_res["success"] is True
+    assert "DAVID CHEN" in data_res["text"]
 
 
 def test_analyze_resume_api_text(client):

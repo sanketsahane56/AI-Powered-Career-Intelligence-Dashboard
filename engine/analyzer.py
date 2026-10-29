@@ -1,13 +1,15 @@
 """
 CareerIQ - Core Career Intelligence & ATS Scoring Engine
-Provides transparent resume scoring, skill extraction, role matching,
-and job description skill gap analysis without requiring third-party paid APIs.
+Provides transparent multi-domain resume scoring, skill extraction, role matching,
+and job description skill gap analysis across tech, product, design, marketing,
+finance, HR, sales, and analytics without requiring third-party paid APIs.
 """
 
 import re
-from typing import Dict, Any, List, Set, Tuple
+from typing import Dict, Any, List, Set, Tuple, Optional
 from collections import Counter
 from engine.skills_taxonomy import (
+    DOMAINS,
     SKILLS_TAXONOMY,
     SKILL_ALIASES,
     CAREER_PROFILES,
@@ -18,22 +20,22 @@ from engine.extractor import ResumeExtractor
 
 
 class CareerAnalyzer:
-    """Analyzes resume text for ATS friendliness, technical skills, and market role fit."""
+    """Analyzes resume text for ATS friendliness, competencies, and market role fit across domains."""
 
     # Metric detection regex (percentages, money, multipliers, metrics)
     METRIC_REGEX = re.compile(
         r"(\d+(?:\.\d+)?%|"
         r"\$\s*\d+(?:,\d+)*(?:\.\d+)?[kKmMbB]?|"
         r"\b\d+(?:\.\d+)?\s*[kKmMbB]\b|"
-        r"\b\d+\s*(?:million|billion|users|customers|queries|requests|req/sec|tps|ms|seconds|x|fold)\b|"
-        r"(?:increased|decreased|reduced|improved|boosted|grew|saved)\s+by\s+\d+)",
+        r"\b\d+\s*(?:million|billion|users|customers|queries|requests|req/sec|tps|ms|seconds|x|fold|clients|accounts|leads|hires)\b|"
+        r"(?:increased|decreased|reduced|improved|boosted|grew|saved|generated|closed|scaled)\s+by\s+\d+)",
         re.IGNORECASE
     )
 
     @classmethod
     def extract_skills(cls, text: str) -> Dict[str, Any]:
         """
-        Extracts verified technical and professional skills from text.
+        Extracts verified technical, design, marketing, finance, HR, and professional skills.
         Uses boundary-safe matching and taxonomy alias normalization.
         """
         normalized_text = f" {text.lower()} "
@@ -43,15 +45,14 @@ class CareerAnalyzer:
         # 1. Check direct taxonomy skills
         for category, skill_list in SKILLS_TAXONOMY.items():
             for skill in skill_list:
-                # Use word boundaries for safe matching (special handling for C++, C#, .NET)
                 escaped = re.escape(skill.lower())
-                if skill.lower() in ["c++", "c#", ".net", "r", "c"]:
+                # Handle special characters in names
+                if skill.lower() in ["c++", "c#", ".net", "r", "c", "p&l", "a/b testing", "seo", "sem", "prd", "dcf"]:
                     pattern = rf"(?:^|[\s,;/()\[\]]){escaped}(?:$|[\s,;/()\[\]])"
                 else:
                     pattern = rf"\b{escaped}\b"
 
                 if re.search(pattern, normalized_text, re.IGNORECASE):
-                    # Canonical name
                     canonical = skill
                     found_skills_set.add(canonical)
                     if canonical not in categorized_skills[category]:
@@ -60,10 +61,13 @@ class CareerAnalyzer:
         # 2. Check alias map
         for alias, target in SKILL_ALIASES.items():
             escaped = re.escape(alias.lower())
-            pattern = rf"\b{escaped}\b"
+            if alias.lower() in ["p&l", "a/b testing", "ui/ux", "b2b", "qa"]:
+                pattern = rf"(?:^|[\s,;/()\[\]]){escaped}(?:$|[\s,;/()\[\]])"
+            else:
+                pattern = rf"\b{escaped}\b"
+
             if re.search(pattern, normalized_text, re.IGNORECASE):
                 found_skills_set.add(target)
-                # Find matching category for target
                 for cat, skill_list in SKILLS_TAXONOMY.items():
                     if target in skill_list and target not in categorized_skills[cat]:
                         categorized_skills[cat].append(target)
@@ -83,21 +87,20 @@ class CareerAnalyzer:
         """Evaluates quantified business and technical metrics within the resume."""
         matches = cls.METRIC_REGEX.findall(text)
         metric_snippets = [m if isinstance(m, str) else m[0] for m in matches]
-        
-        # Calculate impact score
+
         count = len(metric_snippets)
         if count >= 8:
             score = 100
             rating = "Exceptional"
-            feedback = "Superb use of quantifiable metrics, financial numbers, and measurable performance results."
+            feedback = "Superb use of quantifiable metrics, commercial figures, and measurable performance results."
         elif count >= 5:
             score = 85
             rating = "Strong"
-            feedback = "Good presence of measurable outcomes. A few more percentage improvements will make it stellar."
+            feedback = "Good presence of measurable outcomes. A few more percentage or dollar improvements will make it stellar."
         elif count >= 2:
             score = 65
             rating = "Moderate"
-            feedback = "Some measurable data present, but many achievements lack numeric scale (%, $, throughput, time saved)."
+            feedback = "Some measurable data present, but many achievements lack numeric scale (%, $, throughput, time saved, accounts)."
         elif count >= 1:
             score = 45
             rating = "Basic"
@@ -105,7 +108,7 @@ class CareerAnalyzer:
         else:
             score = 25
             rating = "Needs Improvement"
-            feedback = "No quantifiable metrics found! Transform generic duties into measurable accomplishments (e.g., 'reduced latency by 35%')."
+            feedback = "No quantifiable metrics found! Transform generic duties into measurable accomplishments (e.g., 'improved conversion by 28%')."
 
         return {
             "score": score,
@@ -117,7 +120,7 @@ class CareerAnalyzer:
 
     @classmethod
     def evaluate_action_verbs(cls, text: str) -> Dict[str, Any]:
-        """Evaluates the strength and variety of action verbs in resume sentences."""
+        """Evaluates the strength and variety of action verbs in resume sentences across multiple domains."""
         lower_text = text.lower()
         found_strong_verbs = []
         found_weak_phrases = []
@@ -141,14 +144,14 @@ class CareerAnalyzer:
         score = max(20, min(100, raw_score))
 
         if score >= 80:
-            rating = "Dynamic & Leadership-Driven"
-            feedback = "Excellent active voice! You use authoritative action verbs that signal ownership and leadership."
+            rating = "Dynamic & Impact-Driven"
+            feedback = "Excellent active voice! You use authoritative action verbs that signal clear ownership and leadership."
         elif score >= 60:
             rating = "Good Action Voice"
-            feedback = "Solid selection of action verbs. Consider swapping any passive descriptions with high-impact engineering terms."
+            feedback = "Solid selection of action verbs. Consider swapping any passive descriptions with high-impact accomplishments."
         else:
             rating = "Passive Voice Detected"
-            feedback = "Noticeable use of passive phrasing ('responsible for', 'assisted with'). Upgrade to strong verbs like 'architected', 'spearheaded', 'optimized'."
+            feedback = "Noticeable use of passive phrasing ('responsible for', 'assisted with'). Upgrade to strong verbs like 'spearheaded', 'orchestrated', 'optimized'."
 
         return {
             "score": score,
@@ -201,7 +204,6 @@ class CareerAnalyzer:
             length_rating = "Suboptimal (Too short or excessively long)"
             length_score = 50
 
-        # Combine section, contact, and length into structure score
         final_structure_score = int((score * 0.5) + (contact_score * 0.3) + (length_score * 0.2))
 
         return {
@@ -216,19 +218,40 @@ class CareerAnalyzer:
         }
 
     @classmethod
+    def compute_domain_affinities(cls, role_matches: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Calculates candidate domain alignment scores based on role matches."""
+        domain_groups: Dict[str, List[int]] = {}
+        for r in role_matches:
+            dom = r.get("domain", "Software & Cloud")
+            domain_groups.setdefault(dom, []).append(r.get("fit_percentage", 0))
+
+        domain_scores = {}
+        for dom, scores in domain_groups.items():
+            top_scores = sorted(scores, reverse=True)[:2]
+            avg_fit = int(sum(top_scores) / len(top_scores)) if top_scores else 0
+            domain_scores[dom] = avg_fit
+
+        primary_domain = max(domain_scores.items(), key=lambda x: x[1])[0] if domain_scores else "Software & Cloud"
+
+        return {
+            "domain_scores": domain_scores,
+            "primary_domain": primary_domain,
+            "top_domain_fit": domain_scores.get(primary_domain, 0)
+        }
+
+    @classmethod
     def compute_full_analysis(cls, text: str, metadata: Dict[str, Any], word_count: int) -> Dict[str, Any]:
         """
-        Runs the comprehensive transparent multi-dimensional analysis on the candidate resume.
-        Computes overall CareerIQ score and detailed sub-metrics.
+        Runs comprehensive multi-dimensional analysis on the candidate resume.
+        Computes overall ATS score, multi-domain role matching, and custom action plans.
         """
         # 1. Skill extraction
         skills_data = cls.extract_skills(text)
         skill_count = skills_data["total_count"]
-        
+
         # Skill breadth score (0-100)
-        # 18+ skills with category diversity yields 100
         cat_count = sum(1 for c in skills_data["category_counts"].values() if c > 0)
-        skill_score = min(100, int((min(skill_count, 18) / 18 * 70) + (min(cat_count, 5) / 5 * 30)))
+        skill_score = min(100, int((min(skill_count, 15) / 15 * 70) + (min(cat_count, 4) / 4 * 30)))
 
         # 2. Metric & Impact evaluation
         metrics_data = cls.evaluate_metrics_and_impact(text)
@@ -240,12 +263,10 @@ class CareerAnalyzer:
         structure_data = cls.evaluate_structure(metadata, word_count)
 
         # 5. Readability & ATS formatting
-        # Formatting score based on bullet structure and absence of parsing errors
         has_bullets = bool(re.search(r"[•\-\*]\s+[A-Z]", text))
         readability_score = 90 if has_bullets else 70
 
         # Overall CareerIQ Weighted Score
-        # Skills: 30%, Impact: 25%, Verbs: 20%, Structure: 15%, Readability: 10%
         overall_score = int(
             (skill_score * 0.30) +
             (metrics_data["score"] * 0.25) +
@@ -254,26 +275,47 @@ class CareerAnalyzer:
             (readability_score * 0.10)
         )
 
-        # Career Role Matching
+        # Career Role Matching across Multiple Domains
         role_matches = cls.match_career_roles(skills_data["all_skills"])
+        domain_affinities = cls.compute_domain_affinities(role_matches)
+        primary_domain = domain_affinities["primary_domain"]
 
-        # Construct actionable recommendations list
+        # Domain-aware actionable recommendations list
         action_plan = []
         if skill_score < 75:
-            action_plan.append("Expand technical skills section with cloud/DevOps tools (Docker, CI/CD, AWS) or relational databases.")
+            if primary_domain == "Product & Project Management":
+                action_plan.append("Expand skills with product analytics (Mixpanel, Amplitude), roadmap tooling (Jira, Confluence), and PRD authoring.")
+            elif primary_domain == "UI/UX & Design":
+                action_plan.append("Highlight multi-platform design systems, interactive Figma prototypes, and user research methodologies.")
+            elif primary_domain == "Data & AI":
+                action_plan.append("Highlight modern data warehousing (Snowflake, BigQuery), statistical modeling, or ETL pipeline experience.")
+            elif primary_domain == "Digital Marketing & Growth":
+                action_plan.append("Detail paid ad channels (Google Ads, Meta Ads), SEO keyword strategies, and conversion tracking with GA4.")
+            elif primary_domain == "Finance & Accounting":
+                action_plan.append("Feature 3-statement financial modeling, DCF valuation, variance analysis, and ERP platforms (SAP, NetSuite).")
+            elif primary_domain == "Human Resources & Talent":
+                action_plan.append("Showcase HRIS tools (Workday, BambooHR), full-cycle recruiting pipelines, and employee retention strategies.")
+            elif primary_domain == "Sales & Business Development":
+                action_plan.append("Highlight CRM platforms (Salesforce), enterprise quota attainment percentages, and contract negotiation wins.")
+            else:
+                action_plan.append("Expand technical skills section with cloud/DevOps tools (Docker, CI/CD, AWS) or relational databases.")
+
         if metrics_data["score"] < 70:
             action_plan.append("Incorporate at least 4-6 quantified metrics (percentages, revenue, performance improvements, team sizes) in work history.")
         if verbs_data["score"] < 75:
-            action_plan.append("Replace passive phrases ('responsible for', 'handled') with impactful action verbs ('architected', 'spearheaded', 'optimized').")
+            action_plan.append("Replace passive phrases ('responsible for', 'handled') with high-impact action verbs matching your domain.")
         if structure_data["sections_missing"]:
             action_plan.append(f"Add missing standard ATS sections: {', '.join(structure_data['sections_missing'])}.")
         if not structure_data["has_links"]:
-            action_plan.append("Include clickable links to your GitHub profile and LinkedIn page in your contact header.")
+            action_plan.append("Include clickable links to your portfolio, GitHub, or LinkedIn profile in your contact header.")
         if not action_plan:
-            action_plan.append("Your resume meets top-tier ATS standards! Tailor specific keywords for each job application.")
+            action_plan.append("Your resume meets top-tier ATS standards! Tailor specific keywords for each target job application.")
 
         return {
             "overall_score": overall_score,
+            "primary_domain": primary_domain,
+            "domain_scores": domain_affinities["domain_scores"],
+            "top_domain_fit": domain_affinities["top_domain_fit"],
             "dimensions": {
                 "skill_breadth": {
                     "name": "Skill Breadth & Diversity",
@@ -315,12 +357,16 @@ class CareerAnalyzer:
         }
 
     @classmethod
-    def match_career_roles(cls, candidate_skills: List[str]) -> List[Dict[str, Any]]:
-        """Compares candidate skills against industry standard career profiles."""
+    def match_career_roles(cls, candidate_skills: List[str], target_domain: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Compares candidate skills against industry standard career profiles across multiple domains."""
         cand_set = set(candidate_skills)
         matches = []
 
         for role_name, profile in CAREER_PROFILES.items():
+            domain = profile.get("domain", "Software & Cloud")
+            if target_domain and domain.lower() != target_domain.lower():
+                continue
+
             core_skills = profile["core_skills"]
             secondary_skills = profile["secondary_skills"]
 
@@ -337,6 +383,7 @@ class CareerAnalyzer:
 
             matches.append({
                 "role": role_name,
+                "domain": domain,
                 "icon": profile["icon"],
                 "description": profile["description"],
                 "fit_percentage": fit_percentage,
@@ -355,7 +402,7 @@ class CareerAnalyzer:
     def compare_with_job_description(cls, resume_skills: List[str], jd_text: str) -> Dict[str, Any]:
         """
         Deep comparison between candidate resume skills and a specific Job Description (JD).
-        Returns match percentage, matched skills, missing skills, and category radar data.
+        Returns match percentage, matched skills, missing skills, and adaptive category radar data.
         """
         jd_skills_data = cls.extract_skills(jd_text)
         jd_skills = jd_skills_data["all_skills"]
@@ -369,21 +416,29 @@ class CareerAnalyzer:
 
         match_score = int((len(matched) / max(len(jd_skills), 1)) * 100) if jd_skills else 0
 
-        # Compute category distribution for Radar Chart
+        # Compute adaptive category distribution for Radar Chart
         categories = list(SKILLS_TAXONOMY.keys())
-        radar_labels = [c.replace(" & ", "\n& ") for c in categories]
+        active_cats = [
+            c for c in categories
+            if len(resume_set.intersection(set(SKILLS_TAXONOMY[c]))) > 0
+            or len(jd_set.intersection(set(SKILLS_TAXONOMY[c]))) > 0
+        ]
+
+        if len(active_cats) < 5:
+            for c in categories:
+                if c not in active_cats:
+                    active_cats.append(c)
+                if len(active_cats) >= 6:
+                    break
+
+        radar_labels = [c.replace(" & ", "\n& ").replace(", ", ",\n") for c in active_cats]
         resume_category_counts = []
         jd_category_counts = []
 
-        for cat in categories:
+        for cat in active_cats:
             cat_skills = set(SKILLS_TAXONOMY[cat])
-            # Resume count in this category
-            r_count = len(resume_set.intersection(cat_skills))
-            # JD count in this category
-            j_count = len(jd_set.intersection(cat_skills))
-
-            resume_category_counts.append(r_count)
-            jd_category_counts.append(j_count)
+            resume_category_counts.append(len(resume_set.intersection(cat_skills)))
+            jd_category_counts.append(len(jd_set.intersection(cat_skills)))
 
         # Strategic advice
         advice = []

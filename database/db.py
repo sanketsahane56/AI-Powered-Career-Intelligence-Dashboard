@@ -44,6 +44,7 @@ class Database:
                     skills_count INTEGER DEFAULT 0,
                     top_role TEXT DEFAULT 'Full Stack Engineer',
                     top_role_fit INTEGER DEFAULT 0,
+                    top_domain TEXT DEFAULT 'Software & Cloud',
                     skills_json TEXT,
                     dimensions_json TEXT,
                     role_matches_json TEXT,
@@ -68,6 +69,12 @@ class Database:
             """)
 
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_analyses_created ON analyses(created_at DESC)")
+            
+            # Migration check: add top_domain column if it does not exist
+            try:
+                cursor.execute("ALTER TABLE analyses ADD COLUMN top_domain TEXT DEFAULT 'Software & Cloud'")
+            except sqlite3.OperationalError:
+                pass
             conn.commit()
 
     @classmethod
@@ -76,23 +83,26 @@ class Database:
         Saves an analysis record into SQLite and returns the unique session ID.
         """
         session_id = str(uuid.uuid4())[:8]
-        top_role = "Full Stack Engineer"
+        top_role = "Candidate"
         top_role_fit = 0
+        top_domain = analysis_data.get("primary_domain", "Software & Cloud")
 
         roles = analysis_data.get("role_matches", [])
         if roles:
-            top_role = roles[0].get("role", "Full Stack Engineer")
+            top_role = roles[0].get("role", "Candidate")
             top_role_fit = roles[0].get("fit_percentage", 0)
+            if not analysis_data.get("primary_domain"):
+                top_domain = roles[0].get("domain", "Software & Cloud")
 
         with cls.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute("""
                 INSERT INTO analyses (
                     session_id, candidate_name, email, phone, overall_score,
-                    word_count, page_count, skills_count, top_role, top_role_fit,
+                    word_count, page_count, skills_count, top_role, top_role_fit, top_domain,
                     skills_json, dimensions_json, role_matches_json, action_plan_json,
                     raw_text_snippet
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 session_id,
                 metadata.get("candidate_name", "Candidate"),
@@ -104,6 +114,7 @@ class Database:
                 analysis_data.get("skills", {}).get("total_count", 0),
                 top_role,
                 top_role_fit,
+                top_domain,
                 json.dumps(analysis_data.get("skills", {})),
                 json.dumps(analysis_data.get("dimensions", {})),
                 json.dumps(roles),

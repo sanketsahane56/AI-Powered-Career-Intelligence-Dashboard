@@ -87,3 +87,49 @@ def test_compare_with_job_description():
     assert "Kubernetes" in comp["missing_skills"]
     assert "AWS" in comp["missing_skills"]
     assert len(comp["radar_data"]["labels"]) > 0
+
+
+def test_multi_domain_skill_extraction():
+    pm_text = """
+    Priya Sharma | Product Manager
+    Skilled in Product Strategy, Product Roadmapping, PRD, User Stories, Agile, Scrum, Jira, and OKRs.
+    Led A/B Testing experiments and customer discovery sessions in Figma.
+    """
+    skills_data = CareerAnalyzer.extract_skills(pm_text)
+    skills = skills_data["all_skills"]
+    assert "Product Strategy" in skills
+    assert "Product Roadmapping" in skills
+    assert "PRD" in skills
+    assert "User Stories" in skills
+    assert "Agile" in skills
+    assert "Scrum" in skills
+    assert "Jira" in skills
+    assert "A/B Testing" in skills
+    assert "Figma" in skills
+
+
+def test_multi_domain_role_matching():
+    # Product manager profile test
+    pm_skills = ["Product Strategy", "Product Roadmapping", "PRD", "User Stories", "Agile", "Scrum", "Jira", "Stakeholder Management", "A/B Testing"]
+    matches = CareerAnalyzer.match_career_roles(pm_skills)
+    assert len(matches) > 0
+    top_role = matches[0]
+    assert top_role["role"] == "Product Manager"
+    assert top_role["domain"] == "Product & Project Management"
+    assert top_role["fit_percentage"] >= 70
+
+    # Domain filtered matching test
+    tech_matches = CareerAnalyzer.match_career_roles(pm_skills, target_domain="Software & Cloud")
+    assert all(r["domain"] == "Software & Cloud" for r in tech_matches)
+
+
+def test_domain_affinity_computation():
+    role_matches = [
+        {"role": "Product Manager", "domain": "Product & Project Management", "fit_percentage": 90},
+        {"role": "Technical Project Manager", "domain": "Product & Project Management", "fit_percentage": 80},
+        {"role": "Full Stack Engineer", "domain": "Software & Cloud", "fit_percentage": 25}
+    ]
+    affinities = CareerAnalyzer.compute_domain_affinities(role_matches)
+    assert affinities["primary_domain"] == "Product & Project Management"
+    assert affinities["top_domain_fit"] >= 80
+

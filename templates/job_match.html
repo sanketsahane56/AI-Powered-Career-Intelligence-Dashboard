@@ -6,9 +6,12 @@
 <div class="card" style="margin-bottom: 28px;">
     <div class="card-header">
         <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <span class="pill pill-blue" style="font-size: 0.72rem;">Multi-Domain Job Match</span>
+            </div>
             <h2 class="card-title"><i data-lucide="crosshair"></i> Compare Resume against Job Description</h2>
             <p class="card-subtitle">
-                Identify overlapping competencies, missing technical keywords, and category discrepancies before applying.
+                Identify overlapping competencies, missing domain keywords, and category discrepancies across software, data, product, design, marketing, finance, and HR before applying.
             </p>
         </div>
     </div>
@@ -18,12 +21,24 @@
             <!-- Left: Target Job Description -->
             <div>
                 <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 6px;">
-                    1. Select Industry Preset or Custom Job Description
+                    1. Select Industry Preset (By Domain) or Paste Custom Job Description
                 </label>
                 <select id="preset-select" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 12px; font-family: inherit; font-size: 0.9rem;">
                     <option value="">-- Choose a Preset Job or Paste Below --</option>
+                    {% set grouped_presets = {} %}
                     {% for key, preset in presets.items() %}
-                        <option value="{{ key }}" data-text="{{ preset.text }}">{{ preset.title }} ({{ preset.company }})</option>
+                        {% set dom = preset.domain|default('General') %}
+                        {% if dom not in grouped_presets %}
+                            {% set _ = grouped_presets.update({dom: []}) %}
+                        {% endif %}
+                        {% set _ = grouped_presets[dom].append((key, preset)) %}
+                    {% endfor %}
+                    {% for dom_name, p_list in grouped_presets.items() %}
+                        <optgroup label="── {{ dom_name }} ──">
+                            {% for key, preset in p_list %}
+                                <option value="{{ key }}" data-text="{{ preset.text }}" data-domain="{{ preset.domain }}">{{ preset.title }} ({{ preset.company }})</option>
+                            {% endfor %}
+                        </optgroup>
                     {% endfor %}
                 </select>
 
@@ -32,17 +47,19 @@
 
             <!-- Right: Candidate Skills -->
             <div>
-                <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 6px;">
-                    2. Candidate Verified Skills (Comma-separated)
-                </label>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+                    <label style="font-size: 0.85rem; font-weight: 600; margin: 0;">
+                        2. Candidate Verified Skills (Comma-separated)
+                    </label>
+                </div>
                 <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 12px;">
                     {% if candidate_name %}
                         Loaded skills for <strong>{{ candidate_name }}</strong> from your previous scan session.
                     {% else %}
-                        Enter your skills or run a scan in the Resume Scanner.
+                        Enter candidate skills or paste skills from any domain (Tech, Product, Design, Marketing, Finance).
                     {% endif %}
                 </div>
-                <textarea id="skills-input" rows="10" placeholder="Python, React, TypeScript, Docker, PostgreSQL, AWS, Git, REST APIs, Redis, Microservices, CI/CD, Kubernetes..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; font-family: inherit; font-size: 0.88rem; resize: vertical;">{{ skills_list|join(', ') if skills_list else 'Python, JavaScript, TypeScript, React, Next.js, Node.js, Express, Flask, FastAPI, PostgreSQL, Docker, Kubernetes, AWS, Redis, Git, CI/CD, REST APIs, Microservices, System Design, PyTest' }}</textarea>
+                <textarea id="skills-input" rows="10" placeholder="e.g. Python, SQL, Docker, or Figma, Wireframing, User Research, or Product Strategy, Jira, PRD..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; font-family: inherit; font-size: 0.88rem; resize: vertical;">{{ skills_list|join(', ') if skills_list else 'Python, JavaScript, TypeScript, React, Next.js, Node.js, Express, Flask, FastAPI, PostgreSQL, Docker, Kubernetes, AWS, Redis, Git, CI/CD, REST APIs, Microservices, System Design, PyTest' }}</textarea>
             </div>
         </div>
 

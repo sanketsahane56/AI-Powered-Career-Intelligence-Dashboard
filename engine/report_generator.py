@@ -137,15 +137,20 @@ class ReportGenerator:
             textColor=score_color
         )
 
-        top_role = "Full Stack Engineer"
+        top_role = "Candidate"
         top_fit = 0
         roles = analysis_data.get("role_matches", [])
+        primary_domain = analysis_data.get("primary_domain", "")
         if roles:
-            top_role = roles[0].get("role", "Full Stack Engineer")
+            top_role = roles[0].get("role", "Candidate")
             top_fit = roles[0].get("fit_percentage", 0)
+            if not primary_domain:
+                primary_domain = roles[0].get("domain", "General")
 
+        domain_str = f"<b>Target Domain:</b> <font color='#475569'><b>{primary_domain}</b></font><br/>" if primary_domain else ""
         summary_p = Paragraph(
             f"<b>Primary Role Match:</b> <font color='#2563EB'><b>{top_role}</b></font> ({top_fit}% market alignment)<br/>"
+            f"{domain_str}"
             f"<b>Total Verified Skills:</b> {analysis_data.get('skills', {}).get('total_count', 0)} competencies cataloged<br/>"
             f"<b>Quantified Metric Count:</b> {analysis_data.get('metrics', {}).get('count', 0)} measurable outcomes detected<br/>"
             f"<b>ATS Action Voice:</b> {analysis_data.get('verbs', {}).get('strong_count', 0)} high-impact verbs identified",

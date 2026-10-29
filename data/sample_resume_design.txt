@@ -1,0 +1,31 @@
+MAYA LIN
+maya.lin.design@gmail.com | (646) 555-8901 | New York, NY
+linkedin.com/in/mayalin-ux | github.com/mayalin-design
+
+PROFESSIONAL SUMMARY
+Lead UI/UX & Product Designer with 6+ years of experience designing accessible, human-centered web and mobile experiences. Proven expertise scaling design systems in Figma, conducting generative user research, and improving checkout task completion by 45%.
+
+CORE SKILLS & EXPERTISE
+• Design & Prototyping: Figma, Sketch, Adobe XD, Wireframing, Prototyping, Mobile UI, Visual Design, Typography
+• User Research & Strategy: User Research, Usability Testing, User Journey Mapping, Information Architecture, Design Thinking
+• Standards & Frameworks: Design Systems, Responsive Design, Accessibility, WCAG, Interaction Design
+• Collaboration: Cross-functional Collaboration, Agile, Scrum, Jira, Client Presentation
+
+PROFESSIONAL EXPERIENCE
+
+Lead UI/UX Designer | Nexus Digital Studio | New York, NY
+March 2021 – Present
+• Architected a unified multi-platform Design System in Figma comprising 200+ accessible components, adopted by 35 engineers.
+• Spearheaded end-to-end UX redesign of enterprise dashboard, increasing daily user engagement by 38%.
+• Conducted 40+ usability testing sessions and qualitative user research interviews, reducing user task drop-off by 52%.
+• Collaborated with frontend engineers to ensure 100% WCAG accessibility compliance across web and mobile viewports.
+• Mentored 4 associate product designers on interaction design principles, visual hierarchy, and user persona mapping.
+
+Senior Product Designer | Catalyst Health Apps | Boston, MA
+August 2018 – February 2021
+• Designed wireframes, user journeys, and high-fidelity interactive prototypes for iOS and Android health applications.
+• Ran iterative usability tests resulting in a 4.8-star App Store rating across 120,000+ customer reviews.
+• Built comprehensive information architecture diagrams and navigation flows for patient portal launch.
+
+EDUCATION
+Bachelor of Fine Arts in Interaction Design & Human-Computer Interaction | Rhode Island School of Design (RISD) | 2018
