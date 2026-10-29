@@ -1,0 +1,29 @@
+ETHAN VANCE
+ethan.vance.sec@gmail.com | (703) 555-8321 | Washington, DC
+linkedin.com/in/ethanvance-sec | github.com/ethanvance-sec
+
+PROFESSIONAL SUMMARY
+Senior Cybersecurity Analyst and Incident Response Engineer with 6+ years of experience defending enterprise cloud infrastructure, executing vulnerability management programs, and leading SOC operations. Mitigated over 450+ high-severity security incidents, reduced mean time to detect (MTTD) by 48%, and spearheaded NIST CSF compliance frameworks across hybrid AWS environments.
+
+CORE COMPETENCIES & PLATFORMS
+• Security Operations & SIEM: SIEM (Splunk, Elastic SIEM), SOC Analysis, Threat Hunting, Incident Response, Log Analysis, Wireshark, Suricata
+• Vulnerability & Threat Assessment: Vulnerability Assessment, Penetration Testing (Metasploit, Burp Suite), Kali Linux, CVE Remediation, OWASP Top 10
+• Governance, Risk & Cloud Security: NIST, ISO 27001, SOC 2, AWS Security, IAM (Identity & Access Management), Zero Trust Architecture, Firewalls, Endpoint Protection (CrowdStrike)
+
+PROFESSIONAL EXPERIENCE
+Senior Cybersecurity Engineer | Sentinel Defense Systems | Washington, DC
+April 2021 – Present
+• Monitored and triaged enterprise security events across 12,000+ endpoints using Splunk ES and CrowdStrike Falcon.
+• Developed automated SOAR playbooks in Python that decreased phishing incident containment time from 4 hours to 12 minutes.
+• Conducted bi-weekly vulnerability scanning using Nessus across 250+ cloud servers, maintaining a 99.4% SLA compliance rate.
+• Architected network perimeter defense and zero-trust micro-segmentation policies across multi-region AWS VPCs.
+
+Information Security Analyst | Apex Financial Technologies | McLean, VA
+July 2018 – March 2021
+• Investigated potential network intrusions, malware infections, and DDoS attacks as Tier 2 SOC Analyst.
+• Partnered with DevOps engineers to integrate automated SAST and DAST vulnerability scanners into GitHub CI/CD pipelines.
+• Coordinated annual third-party SOC 2 Type II audit readiness, achieving zero major compliance findings.
+
+EDUCATION
+Bachelor of Science in Cybersecurity & Network Forensics | George Mason University | 2018
+• Industry Certifications: CISSP | CompTIA Security+ | CEH (Certified Ethical Hacker)

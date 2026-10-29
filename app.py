@@ -238,7 +238,8 @@ def api_sample_resume():
         "design": "sample_resume_design.txt",
         "marketing": "sample_resume_marketing.txt",
         "finance": "sample_resume_finance.txt",
-        "hr": "sample_resume_hr.txt"
+        "hr": "sample_resume_hr.txt",
+        "cybersecurity": "sample_resume_cybersecurity.txt"
     }
     filename = domain_file_map.get(domain, "sample_resume.txt")
     sample_path = Config.BASE_DIR / "data" / filename
